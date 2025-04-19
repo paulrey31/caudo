@@ -7,9 +7,8 @@ type PuzzleColumnType = {
 
 export default function PuzzleColumn({ column }: PuzzleColumnType) {
 	return (
-		<View>
+		<View style={{ flex: 1 }}>
 			{Object.values(column).map((cell, index) => {
-				// if (cell === 'empty_cell') return null;
 				return (
 					<PuzzleCell
 						key={'cell_' + index}

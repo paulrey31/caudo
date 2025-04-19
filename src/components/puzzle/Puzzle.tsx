@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
 	container: {
 		width: '100%',
 		height: '100%',
+		padding: 20,
 
 		borderWidth: 2,
 		borderColor: 'black',
@@ -36,15 +37,14 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 
-		gap: '20px',
+		gap: 20,
 	},
 	gridContainer: {
+		flex: 1,
 		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'center',
-
-		marginBottom: 20,
 	},
 	text: {
 		fontSize: 18,

@@ -15,12 +15,11 @@ export default function PuzzleCell({ cell }: PuzzleCellType) {
 
 const styles = StyleSheet.create({
 	container: {
-		width: 50,
-		height: 50,
+		flex: 1,
 
 		borderWidth: 2,
 		borderColor: 'black',
-		// borderRadius: 5,
+		borderRadius: 5,
 
 		alignItems: 'center',
 		justifyContent: 'center',

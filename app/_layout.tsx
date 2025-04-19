@@ -1,12 +1,16 @@
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, View, Text } from 'react-native';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { StatusBar } from 'expo-status-bar';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { StyleSheet, Text, View } from 'react-native';
 
 export default function Layout() {
 	return (
-		<SafeAreaProvider style={{ flex: 1, backgroundColor: '#1E1E1E' }}>
+		<SafeAreaProvider
+			style={{
+				flex: 1,
+				backgroundColor: '#1E1E1E',
+			}}>
 			<StatusBar
 				style='light'
 				backgroundColor='#1E1E1E'
@@ -18,7 +22,7 @@ export default function Layout() {
 					headerTitleAlign: 'center',
 					tabBarStyle: {
 						backgroundColor: '#1E1E1E',
-						borderTopWidth: 0, // pour virer la ligne de séparation
+						borderTopWidth: 0,
 					},
 					tabBarActiveTintColor: '#fff',
 					tabBarInactiveTintColor: 'rgba(255,255,255,0.6)',
@@ -34,7 +38,7 @@ export default function Layout() {
 					),
 				}}>
 				<Tabs.Screen
-					name='Home'
+					name='index'
 					options={{
 						title: 'Accueil',
 						tabBarIcon: ({ color, size, focused }) => (
@@ -65,6 +69,10 @@ export default function Layout() {
 }
 
 const styles = StyleSheet.create({
+	safeArea: {
+		flex: 1,
+		backgroundColor: '#1E1E1E',
+	},
 	headerTitle: {
 		flexDirection: 'row',
 		alignItems: 'center',
@@ -73,6 +81,6 @@ const styles = StyleSheet.create({
 		color: '#fff',
 		fontSize: 18,
 		fontWeight: '700',
-		marginLeft: 4, // si tu veux de l’espace à gauche
+		marginLeft: 4,
 	},
 });

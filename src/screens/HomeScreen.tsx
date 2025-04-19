@@ -1,6 +1,5 @@
 // LIBRAIRIE
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 // COMPONENTS
 import Tag from '../components/Tag';
@@ -10,7 +9,7 @@ import { columns } from '../components/puzzle/puzzle.contant';
 
 export default function HomeScreen() {
 	return (
-		<SafeAreaView style={styles.container}>
+		<View style={styles.container}>
 			{/* STATUS + TIMER */}
 			<View style={styles.header}>
 				<Tag
@@ -31,28 +30,23 @@ export default function HomeScreen() {
 					<Text style={styles.txtButton}>Générer</Text>
 				</Pressable>
 			</View>
-		</SafeAreaView>
+		</View>
 	);
 }
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		alignItems: 'center',
-		justifyContent: 'center',
+		padding: 20,
+		gap: 20,
 	},
 	header: {
-		height: 56,
 		width: '100%',
 
 		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'flex-start',
-
-		paddingTop: 20,
-		paddingLeft: 20,
-		paddingRight: 20,
 	},
 	body: {
 		flex: 1,
@@ -60,17 +54,12 @@ const styles = StyleSheet.create({
 
 		alignItems: 'center',
 		justifyContent: 'center',
-
-		padding: 20,
 	},
 	footer: {
 		height: 60,
 		width: '100%',
 		alignItems: 'center',
 		justifyContent: 'center',
-		paddingBottom: 20,
-		paddingLeft: 20,
-		paddingRight: 20,
 	},
 	button: {
 		height: '100%',

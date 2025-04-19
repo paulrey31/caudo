@@ -1,6 +1,3 @@
-// app/index.tsx
-import { Redirect } from 'expo-router';
+import HomeScreen from '../src/screens/HomeScreen';
 
-export default function Index() {
-	return <Redirect href='/tabs/Home' />;
-}
+export default HomeScreen;
