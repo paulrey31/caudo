@@ -1,6 +1,6 @@
 // Solution type
 export type SolutionType = {
-	id: number;
+	id: string;
 	solution: number[];
 	status: string;
 };

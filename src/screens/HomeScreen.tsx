@@ -6,8 +6,12 @@ import Tag from '../components/Tag';
 import Timer from '../components/Timer';
 import Puzzle from '../components/puzzle/Puzzle';
 import { columns } from '../components/puzzle/puzzle.contant';
+import useSolutionsStore from '../store/SolutionsStore';
+import { createSolutionObject } from '../components/puzzle/puzzle.function';
 
 export default function HomeScreen() {
+	// Récupérer la liste des solutions et les actions du store
+	const setSolution = useSolutionsStore((state) => state.setSolution);
 	return (
 		<View style={styles.container}>
 			{/* STATUS + TIMER */}
@@ -26,7 +30,7 @@ export default function HomeScreen() {
 			<View style={styles.footer}>
 				<TouchableOpacity
 					style={styles.button}
-					onPress={() => console.log('heeh')}>
+					onPress={() => setSolution(createSolutionObject())}>
 					<Text style={styles.txtButton}>Générer</Text>
 				</TouchableOpacity>
 			</View>
