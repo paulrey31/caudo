@@ -1,7 +1,8 @@
 import { View } from 'react-native';
 import List from '../components/list/List';
+import { SolutionType } from '../types/SolutionsType';
 
-const solutions = [
+const solutions: SolutionType[] = [
 	{
 		id: 1,
 		solution: [1, 3, 4, 8, 9, 6, 7, 5, 2],
@@ -67,7 +68,7 @@ const solutions = [
 export default function ListScreen() {
 	return (
 		<View style={{ flex: 1, paddingLeft: 8 }}>
-			<List data={solutions} />
+			<List solutions={[]} />
 		</View>
 	);
 }

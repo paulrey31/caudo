@@ -1,3 +1,5 @@
+import { SolutionType } from '@/src/types/list.type';
+
 const column_1 = {
 	1_1: '',
 	1_2: '+',
@@ -69,4 +71,4 @@ export const columns = [
 	column_7,
 ];
 
-export const availableNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+export const availableNumbers: SolutionType = [1, 2, 3, 4, 5, 6, 7, 8, 9];

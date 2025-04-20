@@ -1,5 +1,5 @@
 // LIBRAIRIE
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
 
 // COMPONENTS
 import Tag from '../components/Tag';
@@ -24,11 +24,11 @@ export default function HomeScreen() {
 			</View>
 			{/* BOUTON */}
 			<View style={styles.footer}>
-				<Pressable
+				<TouchableOpacity
 					style={styles.button}
 					onPress={() => console.log('heeh')}>
 					<Text style={styles.txtButton}>Générer</Text>
-				</Pressable>
+				</TouchableOpacity>
 			</View>
 		</View>
 	);

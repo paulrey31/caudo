@@ -11,5 +11,5 @@ export type PuzzleType = {
 };
 
 export type PuzzleAvailableNumbersType = {
-	availableNumbers: [];
+	availableNumbers: number[];
 };

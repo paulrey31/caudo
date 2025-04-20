@@ -1,10 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Tag from '../Tag';
+import { ListRowType } from '@/src/types/list.type';
 
-export default function ListRow({ row }) {
+export default function ListRow({ item }: ListRowType) {
 	// GET DATA NEEDED
-	const { solution, status } = row;
+	const { solution, status } = item;
 
 	// RETURN
 	return (

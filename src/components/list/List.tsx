@@ -1,16 +1,15 @@
-import { FlatList, Text, View } from 'react-native';
+import { FlatList } from 'react-native';
 import ListRow from './ListRow';
+import { SolutionsStateType } from '@/src/types/SolutionsType';
+import ListEmpty from './ListEmpty';
 
-export default function List({ data }) {
+export default function List({ solutions }: SolutionsStateType) {
+	if (solutions.length === 0) return <ListEmpty />;
+
 	return (
 		<FlatList
-			data={data}
-			renderItem={({ item }) => <ListRow row={item} />}
-			ListEmptyComponent={
-				<View>
-					<Text>No solution save</Text>
-				</View>
-			}
+			data={solutions}
+			renderItem={({ item }) => <ListRow item={item} />}
 			keyExtractor={(item) => item.id.toString()}
 			initialNumToRender={10}
 		/>

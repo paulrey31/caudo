@@ -1,7 +1,8 @@
 // Solution type
 export type SolutionType = {
-	id: string;
+	id: number;
 	solution: number[];
+	status: string;
 };
 
 // State Solutions
