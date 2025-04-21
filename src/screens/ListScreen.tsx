@@ -5,7 +5,6 @@ import useSolutionsStore from '../store/SolutionsStore';
 export default function ListScreen() {
 	// get all solutions stored
 	const solutions = useSolutionsStore((state) => state.solutions);
-	console.log(solutions);
 	// return
 	return (
 		<View style={{ flex: 1, paddingLeft: 8 }}>

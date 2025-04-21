@@ -1,25 +1,43 @@
+// librairie
 import { FlatList, View } from 'react-native';
+
+// components
 import ListRow from './ListRow';
-import { SolutionsStateType } from '@/src/types/SolutionsType';
 import ListEmpty from './ListEmpty';
-import { useState } from 'react';
+
+// types
+import { SolutionsStateType } from '@/src/types/SolutionsType';
+
+// hooks
 import useSwipeableListControl from '@/src/hooks/useSwipeableListControl';
+import useListManager from '@/src/hooks/useListManager';
+import ListFilterButton from './ListFilterButton';
 
 export default function List({ solutions }: SolutionsStateType) {
-	// STATE
-	const [scrollEnabled, setScrollEnabled] = useState(true);
-
 	// HOOKS
 	const { registerOpenRow } = useSwipeableListControl();
+	const {
+		scrollEnabled,
+		filter,
+		setFilter,
+		setScrollEnabled,
+		filteredSolutions,
+		counts,
+	} = useListManager(solutions);
 
 	// if no data, return list empty
-	if (solutions.length === 0) return <ListEmpty />;
+	if (filteredSolutions.length === 0) return <ListEmpty />;
 
 	// return
 	return (
 		<View style={{ flex: 1 }}>
+			<ListFilterButton
+				currentFilter={filter}
+				onChange={setFilter}
+				counts={counts}
+			/>
 			<FlatList
-				data={solutions}
+				data={filteredSolutions}
 				scrollEnabled={scrollEnabled}
 				keyExtractor={(item) => item.id}
 				renderItem={({ item }) => (
@@ -30,6 +48,9 @@ export default function List({ solutions }: SolutionsStateType) {
 						registerOpenRow={registerOpenRow}
 					/>
 				)}
+				initialNumToRender={20}
+				maxToRenderPerBatch={20}
+				windowSize={5}
 			/>
 		</View>
 	);

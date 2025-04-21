@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
-import { findAllValidSolutions } from '../components/puzzle/puzzle.function';
 import useSolutionsStore from '../store/SolutionsStore';
+import { generateSolutionsSmart } from '../functions/solution.function';
 
 export default function useHomeManager() {
 	// store zustang
@@ -10,7 +10,7 @@ export default function useHomeManager() {
 	const [timer, setTimer] = useState<string>('00m00s');
 
 	const onCreateAllSolutions = useCallback(() => {
-		const { solutions, duration } = findAllValidSolutions();
+		const { solutions, duration } = generateSolutionsSmart('all');
 
 		setTimer(duration);
 

@@ -11,7 +11,10 @@ type Solution = [
 	number,
 	number,
 ];
-// Fonction principale de calcul
+
+type SolutionVariant = 'one' | 'valid' | 'invalid' | 'all';
+
+// Fonction mathématique principale : cherche à faire exactement 66
 function func(
 	a: number,
 	b: number,
@@ -23,26 +26,11 @@ function func(
 	h: number,
 	i: number,
 ): number {
+	// Calcul basé sur une règle fixe
 	return a + (13 * b) / c + d + 12 * e - f - 11 + (g * h) / i - 10;
 }
 
-// Génère un tableau aléatoire de chiffres de 1 à 9
-export function generateRandomSolution(): Solution {
-	const arr: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-	for (let i = arr.length - 1; i > 0; i--) {
-		const j: number = Math.floor(Math.random() * (i + 1));
-		[arr[i], arr[j]] = [arr[j], arr[i]];
-	}
-	return arr as Solution;
-}
-
-// Vérifie si la solution est correcte (== 66)
-export function evaluateSolution(solution: Solution): 'success' | 'fail' {
-	const result = func(...solution);
-	return Math.abs(result - 66) < 1e-6 ? 'success' : 'fail';
-}
-
-// Fonction pour générer un id
+// 🔧 Génère un UUID-like pour identifier chaque solution
 function generateId(): string {
 	return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
 		const r = (Math.random() * 16) | 0;
@@ -51,84 +39,109 @@ function generateId(): string {
 	});
 }
 
-// Fonction principale
-export function createSolutionObject(): SolutionType {
-	const solution = generateRandomSolution();
-	const status = evaluateSolution(solution);
-	const id = generateId();
-
-	return {
-		id,
-		solution,
-		status,
-	};
-}
-
+// Formatte une durée en ms → "00m05.123s"
 function formatDuration(ms: number): string {
+	// init
 	const totalSeconds = ms / 1000;
 	const minutes = Math.floor(totalSeconds / 60);
 	const seconds = totalSeconds % 60;
 
-	// Format : 00m00.000s
+	// return
 	return `${minutes.toString().padStart(2, '0')}m${seconds.toFixed(3).padStart(6, '0')}s`;
 }
 
+// Génère une permutation aléatoire des chiffres 1 à 9 (sans doublon)
+function generateRandomSolution(): Solution {
+	// init
+	const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+	// loop
+	for (let i = arr.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[arr[i], arr[j]] = [arr[j], arr[i]]; // swap
+	}
+
+	// return
+	return arr as Solution;
+}
+
 /**
- * Génère récursivement toutes les permutations possibles des chiffres de 1 à 9,
- * les évalue via `func`, et stocke uniquement les solutions valides (== 66).
- * Retourne également le temps d'exécution.
+ * Fonction principale — générique et configurable
+ * @param variant détermine quel type de résultat on veut ("one", "valid", "invalid", "all")
  */
-export function findAllValidSolutions(): {
+export function getSolutions(variant: SolutionVariant): {
 	solutions: SolutionType[];
 	duration: string;
 } {
 	const results: SolutionType[] = [];
-
 	const digits = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+	const start = performance.now();
 
-	// Capture le temps de début
-	const startTime = performance.now();
+	// Cas 1 : on veut UNE solution aléatoire
+	if (variant === 'one') {
+		const sol = generateRandomSolution();
+		const status: 'success' | 'fail' =
+			Math.abs(func(...sol) - 66) < 1e-6 ? 'success' : 'fail';
+
+		results.push({
+			id: generateId(),
+			solution: sol,
+			status,
+		});
+
+		const end = performance.now();
+		return {
+			solutions: results,
+			duration: formatDuration(end - start),
+		};
+	}
 
 	/**
-	 * Fonction récursive pour générer les permutations.
-	 * Utilise Heap's algorithm pour la performance.
+	 * Cas 2 : on veut TOUTES les permutations
+	 * La fonction ci-dessous utilise Heap’s algorithm pour générer les 362 880 permutations possibles (9!)
+	 * Pour chaque permutation, on :
+	 * - évalue le calcul
+	 * - vérifie s’il est égal à 66 (ou non)
+	 * - stocke selon le filtre choisi
 	 */
 	function permute(arr: number[], n = arr.length) {
 		if (n === 1) {
-			// Une permutation complète est trouvée
 			const candidate = arr as Solution;
 			const result = func(...candidate);
-			if (Math.abs(result - 66) < 1e-6) {
+			const status: 'success' | 'fail' =
+				Math.abs(result - 66) < 1e-6 ? 'success' : 'fail';
+
+			// On stocke la solution si elle correspond au filtre choisi
+			if (
+				(variant === 'valid' && status === 'success') ||
+				(variant === 'invalid' && status === 'fail') ||
+				variant === 'all'
+			) {
 				results.push({
 					id: generateId(),
 					solution: [...candidate],
-					status: 'success',
+					status,
 				});
 			}
+
 			return;
 		}
 
+		// Heap's Algorithm pour générer toutes les permutations
 		for (let i = 0; i < n; i++) {
 			permute(arr, n - 1);
 			const j = n % 2 === 0 ? i : 0;
-			[arr[n - 1], arr[j]] = [arr[j], arr[n - 1]]; // Swap pour générer nouvelle permutation
+			[arr[n - 1], arr[j]] = [arr[j], arr[n - 1]]; // échange
 		}
 	}
 
-	// Lancer le générateur
+	// Exécution de la génération complète
 	permute(digits);
 
-	// Capture le temps de fin
-	const endTime = performance.now();
-	const durationMs = endTime - startTime;
-	const duration = formatDuration(durationMs);
-
-	console.log(
-		`✅ ${results.length} solution(s) trouvée(s) en ${durationMs.toFixed(2)} ms`,
-	);
+	const end = performance.now();
 
 	return {
 		solutions: results,
-		duration,
+		duration: formatDuration(end - start),
 	};
 }
