@@ -10,6 +10,7 @@ import Tag from '../Tag';
 import { ListRowType } from '@/src/types/list.type';
 import useSwipeableListRowManager from '@/src/hooks/useSwipeableListRowManager';
 import useSolutionsStore from '@/src/store/SolutionsStore';
+import { useRouter } from 'expo-router';
 
 export default function ListRow({
 	item,
@@ -21,6 +22,8 @@ export default function ListRow({
 	onSwipeEnd?: () => void;
 	registerOpenRow: (fn: () => void) => void;
 }) {
+	const router = useRouter();
+
 	// GET DATA NEEDED
 	const { id, solution, status } = item;
 
@@ -36,7 +39,14 @@ export default function ListRow({
 
 	// RETURN
 	return (
-		<View style={styles.container}>
+		<TouchableOpacity
+			style={styles.container}
+			onPress={() =>
+				router.push({
+					pathname: '/SolutionDetails',
+					params: { id },
+				})
+			}>
 			<TouchableOpacity
 				style={styles.deleteButton}
 				onPress={() => removeSolution(id)}>
@@ -69,7 +79,7 @@ export default function ListRow({
 					color='#ffffff'
 				/>
 			</Animated.View>
-		</View>
+		</TouchableOpacity>
 	);
 }
 

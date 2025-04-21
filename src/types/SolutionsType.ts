@@ -12,8 +12,9 @@ export type SolutionsStateType = {
 
 // Actions solutions
 export type SolutionsActionsType = {
-	setSolution: (newSolution: SolutionType) => void;
+	addSolution: (newSolution: SolutionType) => void;
+	addAllSolutions: (newSolutions: SolutionType[]) => void;
 	clearSolutions: () => void;
 	removeSolution: (id: string) => void;
-	getSolutionById: (id: string) => SolutionType | undefined;
+	getSolutionById: (id: string) => SolutionType;
 };

@@ -2,36 +2,23 @@
 import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
 
 // COMPONENTS
-import Tag from '../components/Tag';
+import useHomeManager from '../hooks/useHomeManager';
 import Timer from '../components/Timer';
-import Puzzle from '../components/puzzle/Puzzle';
-import { columns } from '../components/puzzle/puzzle.contant';
-import useSolutionsStore from '../store/SolutionsStore';
-import { createSolutionObject } from '../components/puzzle/puzzle.function';
 
 export default function HomeScreen() {
-	// Récupérer la liste des solutions et les actions du store
-	const setSolution = useSolutionsStore((state) => state.setSolution);
+	// HOOKS
+	const { timer, onCreateAllSolutions } = useHomeManager();
+
+	// render
 	return (
 		<View style={styles.container}>
-			{/* STATUS + TIMER */}
-			<View style={styles.header}>
-				<Tag
-					label='Success'
-					color='green'
-				/>
-				<Timer time='0.80s' />
-			</View>
-			{/* PUZZLE */}
-			<View style={styles.body}>
-				<Puzzle columns={columns} />
-			</View>
+			<Timer time={'' + timer} />
 			{/* BOUTON */}
 			<View style={styles.footer}>
 				<TouchableOpacity
 					style={styles.button}
-					onPress={() => setSolution(createSolutionObject())}>
-					<Text style={styles.txtButton}>Générer</Text>
+					onPress={() => onCreateAllSolutions()}>
+					<Text style={styles.txtButton}>Générer toutes les solutions</Text>
 				</TouchableOpacity>
 			</View>
 		</View>
@@ -51,6 +38,16 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'flex-start',
+	},
+	buttonSave: {
+		width: 100,
+		height: 36,
+
+		backgroundColor: '#E16A54',
+		borderRadius: 5,
+
+		alignItems: 'center',
+		justifyContent: 'center',
 	},
 	body: {
 		flex: 1,

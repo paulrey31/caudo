@@ -15,9 +15,14 @@ const useSolutionsStore = create<SolutionsStateType & SolutionsActionsType>()(
 		(set, get) => ({
 			solutions: [],
 			// Ajout de la solution
-			setSolution: (newSolution) =>
+			addSolution: (newSolution) =>
 				set((state) => ({
 					solutions: [...state.solutions, newSolution],
+				})),
+			// Ajout des solutions
+			addAllSolutions: (newSolutions) =>
+				set(() => ({
+					solutions: [...newSolutions],
 				})),
 			// Supprime tout les solutions
 			clearSolutions: () =>

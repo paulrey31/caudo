@@ -63,3 +63,72 @@ export function createSolutionObject(): SolutionType {
 		status,
 	};
 }
+
+function formatDuration(ms: number): string {
+	const totalSeconds = ms / 1000;
+	const minutes = Math.floor(totalSeconds / 60);
+	const seconds = totalSeconds % 60;
+
+	// Format : 00m00.000s
+	return `${minutes.toString().padStart(2, '0')}m${seconds.toFixed(3).padStart(6, '0')}s`;
+}
+
+/**
+ * Génère récursivement toutes les permutations possibles des chiffres de 1 à 9,
+ * les évalue via `func`, et stocke uniquement les solutions valides (== 66).
+ * Retourne également le temps d'exécution.
+ */
+export function findAllValidSolutions(): {
+	solutions: SolutionType[];
+	duration: string;
+} {
+	const results: SolutionType[] = [];
+
+	const digits = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+	// Capture le temps de début
+	const startTime = performance.now();
+
+	/**
+	 * Fonction récursive pour générer les permutations.
+	 * Utilise Heap's algorithm pour la performance.
+	 */
+	function permute(arr: number[], n = arr.length) {
+		if (n === 1) {
+			// Une permutation complète est trouvée
+			const candidate = arr as Solution;
+			const result = func(...candidate);
+			if (Math.abs(result - 66) < 1e-6) {
+				results.push({
+					id: generateId(),
+					solution: [...candidate],
+					status: 'success',
+				});
+			}
+			return;
+		}
+
+		for (let i = 0; i < n; i++) {
+			permute(arr, n - 1);
+			const j = n % 2 === 0 ? i : 0;
+			[arr[n - 1], arr[j]] = [arr[j], arr[n - 1]]; // Swap pour générer nouvelle permutation
+		}
+	}
+
+	// Lancer le générateur
+	permute(digits);
+
+	// Capture le temps de fin
+	const endTime = performance.now();
+	const durationMs = endTime - startTime;
+	const duration = formatDuration(durationMs);
+
+	console.log(
+		`✅ ${results.length} solution(s) trouvée(s) en ${durationMs.toFixed(2)} ms`,
+	);
+
+	return {
+		solutions: results,
+		duration,
+	};
+}
