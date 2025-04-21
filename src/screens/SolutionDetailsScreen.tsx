@@ -1,66 +1,114 @@
-// LIBRAIRIE
-import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
+// libraire
+import {
+	TouchableOpacity,
+	StyleSheet,
+	Text,
+	View,
+	TouchableWithoutFeedback,
+	Keyboard,
+} from 'react-native';
+import { router, useLocalSearchParams } from 'expo-router';
+import * as Haptics from 'expo-haptics';
 
-// COMPONENTS
+// components
 import Tag from '../components/Tag';
 import Puzzle from '../components/puzzle/Puzzle';
-import { columns } from '../components/puzzle/puzzle.contant';
-import { useLocalSearchParams } from 'expo-router';
+
+// store
+import useSolutionsStore from '../store/SolutionsStore';
+
+// hooks
 import useSolutionDetailsManager from '../hooks/useSolutionDetailsManager';
 
 export default function SolutionDetailsScreen() {
+	// store zustang
+	const updateSolution = useSolutionsStore((state) => state.updateSolution);
+	const removeSolution = useSolutionsStore((state) => state.removeSolution);
+
+	// params
 	const { id } = useLocalSearchParams();
 
 	// check if id is array
 	const solutionId = Array.isArray(id) ? id[0] : id;
 
 	// HOOKs
-	const { state } = useSolutionDetailsManager({ id: solutionId });
+	const { state, isUpdated, columns, updateSolutionAtIndex } =
+		useSolutionDetailsManager({
+			id: solutionId,
+		});
 
 	// render
 	return (
-		<View style={styles.container}>
-			{/* STATUS + TIMER */}
-			<View style={styles.header}>
-				<Tag
-					label={state.status || 'Empty'}
-					color={
-						state.status
-							? state.status === 'success'
-								? 'green'
-								: 'red'
-							: '#BBBBBB'
-					}
-				/>
-				{/* <TouchableOpacity
-					style={{
-						...styles.buttonSave,
-						backgroundColor: state.length === 0 ? '#BBBBBB' : '#E16A54',
-					}}
-					disabled={state.length === 0}
-					onPress={() => onSaveSolution()}>
-					<Text
+		<TouchableWithoutFeedback
+			onPress={Keyboard.dismiss}
+			accessible={false}>
+			<View style={styles.container}>
+				{/* STATUS + TIMER */}
+				<View style={styles.header}>
+					<Tag
+						label={state.status || 'Empty'}
+						color={
+							state.status
+								? state.status === 'success'
+									? 'green'
+									: 'red'
+								: '#BBBBBB'
+						}
+					/>
+					<TouchableOpacity
 						style={{
-							...styles.txtButton,
-							color: state.length === 0 ? '#DCD7C9' : '#ffffff',
+							...styles.buttonSave,
+							backgroundColor: !isUpdated ? '#BBBBBB' : '#E16A54',
+						}}
+						disabled={!isUpdated}
+						onPress={() => {
+							Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+							updateSolution(solutionId, state.solution, state.status);
 						}}>
-						Save
-					</Text>
-				</TouchableOpacity> */}
+						<Text
+							style={{
+								...styles.txtButton,
+								color: !isUpdated ? '#DCD7C9' : '#ffffff',
+							}}>
+							Update
+						</Text>
+					</TouchableOpacity>
+				</View>
+				{/* PUZZLE */}
+				<View style={styles.body}>
+					<Puzzle
+						state={state}
+						columns={columns}
+						updateSolutionAtIndex={updateSolutionAtIndex}
+					/>
+				</View>
+				{/* FOOTER */}
+				<View style={styles.footer}>
+					<TouchableOpacity
+						style={styles.button}
+						onPress={() => {
+							Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+							removeSolution(solutionId);
+							router.back();
+						}}>
+						<Text style={styles.txtButton}>Supprimer la solution</Text>
+					</TouchableOpacity>
+				</View>
 			</View>
-			{/* PUZZLE */}
-			<View style={styles.body}>
-				<Puzzle columns={columns} />
-			</View>
-		</View>
+		</TouchableWithoutFeedback>
 	);
 }
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1,
+		height: '100%',
 		padding: 20,
 		gap: 20,
+
+		display: 'flex',
+		flexDirection: 'column',
+		justifyContent: 'flex-start',
+		alignItems: 'flex-start',
 	},
 	header: {
 		width: '100%',
@@ -81,8 +129,8 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	body: {
-		flex: 1,
 		width: '100%',
+		height: '50%',
 
 		alignItems: 'center',
 		justifyContent: 'center',

@@ -1,5 +1,12 @@
 // librairie
-import { FlatList, View } from 'react-native';
+import {
+	FlatList,
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	View,
+} from 'react-native';
+import * as Haptics from 'expo-haptics';
 
 // components
 import ListRow from './ListRow';
@@ -12,8 +19,12 @@ import { SolutionsStateType } from '@/src/types/SolutionsType';
 import useSwipeableListControl from '@/src/hooks/useSwipeableListControl';
 import useListManager from '@/src/hooks/useListManager';
 import ListFilterButton from './ListFilterButton';
+import useSolutionsStore from '@/src/store/SolutionsStore';
 
 export default function List({ solutions }: SolutionsStateType) {
+	// store zustang
+	const clearSolutions = useSolutionsStore((state) => state.clearSolutions);
+
 	// HOOKS
 	const { registerOpenRow } = useSwipeableListControl();
 	const {
@@ -26,16 +37,18 @@ export default function List({ solutions }: SolutionsStateType) {
 	} = useListManager(solutions);
 
 	// if no data, return list empty
-	if (filteredSolutions.length === 0) return <ListEmpty />;
+	if (solutions.length === 0) return <ListEmpty />;
 
 	// return
 	return (
 		<View style={{ flex: 1 }}>
+			{/* FILTER */}
 			<ListFilterButton
 				currentFilter={filter}
 				onChange={setFilter}
 				counts={counts}
 			/>
+			{/* LIST */}
 			<FlatList
 				data={filteredSolutions}
 				scrollEnabled={scrollEnabled}
@@ -52,6 +65,33 @@ export default function List({ solutions }: SolutionsStateType) {
 				maxToRenderPerBatch={20}
 				windowSize={5}
 			/>
+			{/* DELETE ALL SOLUTION */}
+			<TouchableOpacity
+				style={styles.button}
+				onPress={() => {
+					Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+					clearSolutions();
+				}}>
+				<Text style={styles.txtButton}>Supprimer toute les solutions</Text>
+			</TouchableOpacity>
 		</View>
 	);
 }
+
+const styles = StyleSheet.create({
+	button: {
+		height: 52,
+		width: '98%',
+		alignItems: 'center',
+		justifyContent: 'center',
+		backgroundColor: '#1E1E1E',
+		borderRadius: 5,
+		marginTop: 12,
+		marginBottom: 12,
+	},
+	txtButton: {
+		fontSize: 20,
+		fontWeight: 700,
+		color: '#ffffff',
+	},
+});

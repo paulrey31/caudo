@@ -61,7 +61,7 @@ const column_7 = {
 	7_5: '',
 	7_6: ':',
 };
-export const columns = [
+export const defaultColumns = [
 	column_1,
 	column_2,
 	column_3,

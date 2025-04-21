@@ -1,10 +1,12 @@
 import { Animated, StyleSheet, View } from 'react-native';
 import PuzzleColumn from './PuzzleColumn';
 import { PuzzleType } from './puzzle.type';
-import PuzzleAvailableNumbers from './PuzzleAvailableNumbers';
-import { availableNumbers } from './puzzle.contant';
 
-export default function Puzzle({ columns }: PuzzleType) {
+export default function Puzzle({
+	state,
+	columns,
+	updateSolutionAtIndex,
+}: PuzzleType) {
 	return (
 		<Animated.View style={styles.container}>
 			{/* GRID */}
@@ -14,12 +16,12 @@ export default function Puzzle({ columns }: PuzzleType) {
 						<PuzzleColumn
 							key={'column_' + index}
 							column={column}
+							state={state}
+							updateSolutionAtIndex={updateSolutionAtIndex}
 						/>
 					);
 				})}
 			</View>
-			{/* AVAILABLE NUMBERS */}
-			<PuzzleAvailableNumbers availableNumbers={availableNumbers} />
 		</Animated.View>
 	);
 }

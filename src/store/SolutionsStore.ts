@@ -36,6 +36,23 @@ const useSolutionsStore = create<SolutionsStateType & SolutionsActionsType>()(
 				})),
 			// Récupère une solution
 			getSolutionById: (id) => get().solutions.find((sol) => sol.id === id), // Recherche de la solution par ID
+			// Update de la solution
+			updateSolution: (id, newSolution, newStatus) =>
+				set((state) => {
+					const index = state.solutions.findIndex((s) => s.id === id);
+					if (index === -1) return {};
+
+					const updatedSolutions = [...state.solutions];
+					const existing = updatedSolutions[index];
+
+					updatedSolutions[index] = {
+						...existing,
+						solution: newSolution,
+						status: newStatus,
+					};
+
+					return { solutions: updatedSolutions };
+				}),
 		}),
 		{
 			name: 'solutions-storage', // Le nom utilisé pour stocker les données

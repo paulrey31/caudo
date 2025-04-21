@@ -1,5 +1,8 @@
+// librairie
 import { View, TouchableOpacity, Text } from 'react-native';
-import React from 'react';
+import * as Haptics from 'expo-haptics';
+
+// hooks
 import { FilterType } from '@/src/hooks/useListManager';
 
 type Props = {
@@ -23,7 +26,10 @@ export default function ListFilterButton({
 				borderRadius: 12,
 				marginRight: 8,
 			}}
-			onPress={() => onChange(value)}>
+			onPress={() => {
+				Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+				onChange(value);
+			}}>
 			<Text style={{ color: currentFilter === value ? '#fff' : '#000' }}>
 				{label} {value !== 'all' ? '(' + counts[value] + ')' : null}
 			</Text>

@@ -17,4 +17,9 @@ export type SolutionsActionsType = {
 	clearSolutions: () => void;
 	removeSolution: (id: string) => void;
 	getSolutionById: (id: string) => SolutionType;
+	updateSolution: (
+		id: string,
+		newSolution: number[],
+		newStatus: string,
+	) => void;
 };

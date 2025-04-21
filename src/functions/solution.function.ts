@@ -16,7 +16,7 @@ export type SolutionType = {
 	status: 'success' | 'fail';
 };
 
-export type Variant = 'random' | 'all-valid' | 'all-invalid' | 'all';
+export type SolutionVariant = 'random' | 'all-valid' | 'all-invalid' | 'all';
 
 function func(
 	a: number,
@@ -44,9 +44,9 @@ function formatDuration(ms: number): string {
 }
 
 /**
- * 🚀 Génère les solutions selon le mode `variant` choisi
+ * Génère les solutions selon le mode `variant` choisi
  */
-export function generateSolutionsSmart(variant: Variant): {
+export function generateSolutionsSmart(variant: SolutionVariant): {
 	solutions: SolutionType[];
 	duration: string;
 	durationMs: number;
@@ -128,4 +128,65 @@ export function generateSolutionsSmart(variant: Variant): {
 		duration: formatDuration(end - start),
 		durationMs: end - start,
 	};
+}
+
+/**
+ * Check si la solution utilise les chiffres de 1 à 9
+ * Check si les chiffres sont utilisé une seule fois
+ */
+export function isValidSolution(solution: number[]): boolean {
+	// Vérifie qu'il y a exactement 9 éléments
+	if (solution.length !== 9) return false;
+
+	const seen = new Set<number>();
+
+	for (const num of solution) {
+		// Doit être entre 1 et 9
+		if (num < 1 || num > 9) return false;
+
+		// Pas de doublon
+		if (seen.has(num)) return false;
+
+		seen.add(num);
+	}
+
+	return true;
+}
+
+type Column = Record<string, string>;
+
+export function applySolutionToColumns(
+	columns: Column[],
+	solution: number[],
+): Column[] {
+	let index = 0;
+
+	return columns.map((col, colIndex) => {
+		// On récupère les clés triées verticalement (du haut vers le bas)
+		const keys = Object.keys(col).sort((a, b) => {
+			const [, aRow] = a.split('_').map(Number);
+			const [, bRow] = b.split('_').map(Number);
+			return aRow - bRow;
+		});
+
+		// Clés à remplir
+		const emptyKeys = keys.filter((key) => col[key] === '');
+
+		// On extrait les valeurs depuis la solution
+		let valuesForColumn = solution?.slice(index, index + emptyKeys.length);
+
+		// 👉 Inverser seulement la colonne 3 (index 2)
+		if (colIndex === 2) {
+			valuesForColumn = valuesForColumn.reverse();
+		}
+
+		// Injecter les valeurs dans les bons emplacements
+		const updatedColumn: Column = { ...col };
+		emptyKeys.forEach((key, i) => {
+			updatedColumn[key] = valuesForColumn[i] ?? '';
+		});
+
+		index += emptyKeys.length;
+		return updatedColumn;
+	});
 }

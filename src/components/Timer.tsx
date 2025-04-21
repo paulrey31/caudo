@@ -14,7 +14,7 @@ export default function Timer({ time }: TimerType) {
 
 const styles = StyleSheet.create({
 	container: {
-		width: 100,
+		width: 140,
 		height: 36,
 		borderWidth: 2,
 		borderColor: 'black',
