@@ -25,8 +25,10 @@ export default function List() {
 	const {
 		scrollEnabled,
 		filter,
+		isLoading,
 		setFilter,
 		setScrollEnabled,
+		setIsLoading,
 		filteredSolutions,
 		counts,
 	} = useListManager(solutions);
@@ -65,6 +67,7 @@ export default function List() {
 				<Button
 					label='Supprimer toute les solutions'
 					onPress={async () => {
+						setIsLoading(true);
 						Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 						try {
 							await deleteAllSolutions();
@@ -72,12 +75,13 @@ export default function List() {
 							console.error('Erreur générale :', e);
 						}
 						clearSolutions();
+						setIsLoading(false);
 					}}
 					color='#1E1E1E'
 					height={60}
 					width='98%'
-					disabled={false}
-					isLoading={false}
+					disabled={isLoading}
+					isLoading={isLoading}
 				/>
 			</View>
 		</View>
