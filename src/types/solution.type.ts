@@ -1,5 +1,10 @@
 // solution variant
-export type SolutionVariant = 'random' | 'all-valid' | 'all-invalid' | 'all';
+export type SolutionVariant =
+	| 'manual'
+	| 'random'
+	| 'all-valid'
+	| 'all-invalid'
+	| 'all';
 
 // solution
 export type Solution = number[];

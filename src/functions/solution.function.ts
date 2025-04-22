@@ -70,12 +70,25 @@ function formatDuration(ms: number): string {
 export function generateSolutionsSmart(variant: SolutionVariant): {
 	solutions: SolutionType[];
 	duration: string;
-	durationMs: number;
 } {
 	const start = performance.now();
 	const digits = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 	const used = new Set<number>();
 	const results: SolutionType[] = [];
+
+	// Mode manuel : génère une seule solution manuelle
+	if (variant === 'manual') {
+		return {
+			solutions: [
+				{
+					id: generateId(),
+					solution: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+					status: 'fail',
+				},
+			],
+			duration: formatDuration(performance.now() - start),
+		};
+	}
 
 	// Mode aléatoire : génère une seule solution aléatoire
 	if (variant === 'random') {
@@ -91,7 +104,6 @@ export function generateSolutionsSmart(variant: SolutionVariant): {
 				},
 			],
 			duration: formatDuration(performance.now() - start),
-			durationMs: performance.now() - start,
 		};
 	}
 
@@ -154,7 +166,6 @@ export function generateSolutionsSmart(variant: SolutionVariant): {
 	return {
 		solutions: results,
 		duration: formatDuration(end - start),
-		durationMs: end - start,
 	};
 }
 

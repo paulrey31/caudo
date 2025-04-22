@@ -49,6 +49,10 @@ export default function Home() {
 						type: 'all' as SolutionVariant,
 					},
 					{ label: 'Générer une solutions', type: 'random' as SolutionVariant },
+					{
+						label: 'Créer une solutions manuellement',
+						type: 'manual' as SolutionVariant,
+					},
 				].map((btn, index) => (
 					<TouchableOpacity
 						key={index}
