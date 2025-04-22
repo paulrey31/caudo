@@ -7,6 +7,7 @@ import useSolutionsStore from '@/src/store/SolutionsStore';
 import { useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { useRef } from 'react';
+import { SolutionStatusColor } from '@/src/types/solution.type';
 
 export default function ListRow({
 	item,
@@ -90,7 +91,7 @@ export default function ListRow({
 						});
 					}}
 					style={styles.item}>
-					<View style={{ flexDirection: 'row', gap: 4 }}>
+					<View style={{ flexDirection: 'row' }}>
 						{solution.map((item, index) => (
 							<View
 								key={index}
@@ -100,10 +101,10 @@ export default function ListRow({
 						))}
 					</View>
 
-					<View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+					<View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
 						<Tag
 							label={status}
-							color={status === 'success' ? 'green' : 'red'}
+							color={SolutionStatusColor[status]}
 							size='small'
 						/>
 						<MaterialIcons
@@ -139,6 +140,7 @@ const styles = StyleSheet.create({
 		borderRadius: 5,
 		elevation: 2,
 		zIndex: 1,
+		gap: 12,
 	},
 	deleteButton: {
 		backgroundColor: '#ff3b30',

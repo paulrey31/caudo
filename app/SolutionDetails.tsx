@@ -20,10 +20,12 @@ import useSolutionsStore from '@/src/store/SolutionsStore';
 import useSolutionDetailsManager from '@/src/hooks/useSolutionDetailsManager';
 import { PuzzleGrid } from '@/src/components/puzzle/PuzzleGrid';
 
+// types
+import { SolutionStatusColor } from '@/src/types/solution.type';
+
 export default function SolutionDetailsScreen() {
 	// store zustang
 	const removeSolution = useSolutionsStore((state) => state.removeSolution);
-	const updateSolution = useSolutionsStore((state) => state.updateSolution);
 
 	// params
 	const { id } = useLocalSearchParams();
@@ -32,9 +34,10 @@ export default function SolutionDetailsScreen() {
 	const solutionId = Array.isArray(id) ? id[0] : id;
 
 	// HOOKs
-	const { state, isUpdated, handleUpdateSolution } = useSolutionDetailsManager({
-		id: solutionId,
-	});
+	const { state, isUpdated, handleUpdateSolution, handleSaveSolution } =
+		useSolutionDetailsManager({
+			id: solutionId,
+		});
 
 	// render
 	return (
@@ -46,13 +49,7 @@ export default function SolutionDetailsScreen() {
 				<View style={styles.header}>
 					<Tag
 						label={state.status || 'Empty'}
-						color={
-							state.status
-								? state.status === 'success'
-									? 'green'
-									: 'red'
-								: '#BBBBBB'
-						}
+						color={SolutionStatusColor[state.status]}
 					/>
 					<TouchableOpacity
 						style={{
@@ -62,8 +59,10 @@ export default function SolutionDetailsScreen() {
 						}}
 						disabled={!isUpdated || state.status === 'error'}
 						onPress={() => {
-							Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-							updateSolution(solutionId, state.solution, state.status);
+							Haptics.notificationAsync(
+								Haptics.NotificationFeedbackType.Success,
+							);
+							handleSaveSolution();
 						}}>
 						<Text
 							style={{
@@ -89,7 +88,9 @@ export default function SolutionDetailsScreen() {
 					<TouchableOpacity
 						style={styles.button}
 						onPress={() => {
-							Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+							Haptics.notificationAsync(
+								Haptics.NotificationFeedbackType.Success,
+							);
 							removeSolution(solutionId);
 							router.back();
 						}}>

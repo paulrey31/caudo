@@ -6,6 +6,12 @@ export type Solution = number[];
 
 export type SolutionStatus = 'success' | 'fail' | 'error';
 
+export const SolutionStatusColor = {
+	success: 'green',
+	fail: 'orange',
+	error: 'red',
+};
+
 // Solution type
 export type SolutionType = {
 	id: string;

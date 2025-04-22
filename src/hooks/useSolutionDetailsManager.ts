@@ -12,7 +12,9 @@ import {
 
 export default function useSolutionDetailsManager({ id = '' }) {
 	// store zustang
+	const updateSolution = useSolutionsStore((state) => state.updateSolution);
 	const getSolutionById = useSolutionsStore((state) => state.getSolutionById);
+	const solutionStored = getSolutionById(id);
 
 	// state
 	const [state, setState] = useState<SolutionType>({
@@ -26,12 +28,17 @@ export default function useSolutionDetailsManager({ id = '' }) {
 		// calculate the new status
 		const newStatus = calculateSolutionStatus(solution);
 		// check if the solution has changed
-		const hasChanged = hasSolutionChanged(solution, state.solution);
+		const hasChanged = hasSolutionChanged(solution, solutionStored.solution);
 
 		// update the solution
 		setState((prev) => ({ ...prev, solution, status: newStatus }));
 		// update the isUpdated state
 		setIsUpdated(hasChanged);
+	};
+
+	const handleSaveSolution = () => {
+		updateSolution(id, state.solution, state.status);
+		setIsUpdated(false);
 	};
 
 	// useEffect to get the solution and apply it to the columns
@@ -45,5 +52,6 @@ export default function useSolutionDetailsManager({ id = '' }) {
 		state,
 		isUpdated,
 		handleUpdateSolution,
+		handleSaveSolution,
 	};
 }

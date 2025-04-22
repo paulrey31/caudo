@@ -27,8 +27,9 @@ export default function Home() {
 			{/* DESCRIPTION */}
 			<View style={styles.header}>
 				<Text style={styles.textMainDescription}>
-					Bienvenue sur l'application Câu đố!
+					Bienvenue sur l'application
 				</Text>
+				<Text style={styles.textMainDescription}>Câu đố!</Text>
 				<Text style={styles.textDescription}>
 					Cette application vous permet de générer, visusaliser et de mettre à
 					jour vos solutions pour ce jeux basé sur un casse-tête vietnamien.
@@ -37,7 +38,7 @@ export default function Home() {
 			<View style={styles.body}>
 				{/* TIMER */}
 				<Text style={styles.textMainDescription}>
-					Temps de génération des solutions
+					Temps pour générer les solutions
 				</Text>
 				<Timer time={'' + timer} />
 
