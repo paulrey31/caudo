@@ -41,8 +41,8 @@ export default function Home() {
 					color='#1E1E1E'
 					height={60}
 					width='100%'
-					disabled={isLoading['all']}
-					isLoading={isLoading['all']}
+					disabled={isLoading.all || isLoading.random}
+					isLoading={isLoading.all}
 					onPress={async () => {
 						setLoadingMap((prev) => ({ ...prev, all: true }));
 						await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -56,8 +56,8 @@ export default function Home() {
 					color='#1E1E1E'
 					height={60}
 					width='100%'
-					disabled={isLoading['random']}
-					isLoading={isLoading['random']}
+					disabled={isLoading.all || isLoading.random}
+					isLoading={isLoading.random}
 					onPress={async () => {
 						setLoadingMap((prev) => ({ ...prev, random: true }));
 						await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
