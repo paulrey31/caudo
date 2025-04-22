@@ -1,12 +1,13 @@
 import { useState, useMemo } from 'react';
-import { SolutionType } from '@/src/types/SolutionsType';
 
-export type FilterType = 'all' | 'success' | 'fail';
+// types
+import { SolutionType } from '@/src/types/solution.type';
+import { ListFilterType } from '@/src/types/list.type';
 
 export default function useListManager(solutions: SolutionType[]) {
 	// state
 	const [scrollEnabled, setScrollEnabled] = useState<boolean>(true);
-	const [filter, setFilter] = useState<FilterType>('all');
+	const [filter, setFilter] = useState<ListFilterType>('all');
 
 	// Liste filtrée selon le filtre actif
 	const filteredSolutions = useMemo(() => {

@@ -1,23 +1,27 @@
-export type Solution = [
-	number,
-	number,
-	number,
-	number,
-	number,
-	number,
-	number,
-	number,
-	number,
-];
+import {
+	Solution,
+	SolutionStatus,
+	SolutionType,
+	SolutionVariant,
+} from '../types/solution.type';
 
-export type SolutionType = {
-	id: string;
-	solution: Solution;
-	status: 'success' | 'fail';
-};
+// Exporter le type SolutionVariant pour qu'il soit accessible depuis d'autres fichiers
+export { SolutionVariant };
 
-export type SolutionVariant = 'random' | 'all-valid' | 'all-invalid' | 'all';
-
+/**
+ * Fonction mathématique qui calcule le résultat d'une solution
+ *
+ * @param a - Premier chiffre
+ * @param b - Deuxième chiffre
+ * @param c - Troisième chiffre
+ * @param d - Quatrième chiffre
+ * @param e - Cinquième chiffre
+ * @param f - Sixième chiffre
+ * @param g - Septième chiffre
+ * @param h - Huitième chiffre
+ * @param i - Neuvième chiffre
+ * @returns Le résultat du calcul
+ */
 function func(
 	a: number,
 	b: number,
@@ -32,10 +36,21 @@ function func(
 	return a + (13 * b) / c + d + 12 * e - f - 11 + (g * h) / i - 10;
 }
 
+/**
+ * Génère un identifiant unique aléatoire
+ *
+ * @returns Un identifiant aléatoire sous forme de chaîne de caractères
+ */
 function generateId(): string {
 	return Math.random().toString(36).slice(2, 10);
 }
 
+/**
+ * Formate une durée en millisecondes en une chaîne lisible
+ *
+ * @param ms - Durée en millisecondes
+ * @returns Durée formatée au format "MMmSS.sss"
+ */
 function formatDuration(ms: number): string {
 	const totalSeconds = ms / 1000;
 	const minutes = Math.floor(totalSeconds / 60);
@@ -44,7 +59,13 @@ function formatDuration(ms: number): string {
 }
 
 /**
- * Génère les solutions selon le mode `variant` choisi
+ * Génère des solutions selon le mode spécifié
+ *
+ * Cette fonction utilise un algorithme de backtracking pour générer toutes les solutions possibles
+ * ou une solution aléatoire selon le variant spécifié.
+ *
+ * @param variant - Type de solutions à générer ('random', 'all-valid', 'all-invalid', 'all')
+ * @returns Un objet contenant les solutions générées, la durée de génération et la durée en ms
  */
 export function generateSolutionsSmart(variant: SolutionVariant): {
 	solutions: SolutionType[];
@@ -56,7 +77,7 @@ export function generateSolutionsSmart(variant: SolutionVariant): {
 	const used = new Set<number>();
 	const results: SolutionType[] = [];
 
-	// 🎲 Si le mode est "random", génère simplement une permutation aléatoire
+	// Mode aléatoire : génère une seule solution aléatoire
 	if (variant === 'random') {
 		const shuffled = [...digits].sort(() => Math.random() - 0.5);
 		const result = func(...(shuffled as Solution));
@@ -77,14 +98,19 @@ export function generateSolutionsSmart(variant: SolutionVariant): {
 	const current: number[] = [];
 
 	/**
-	 * 🧠 Fonction récursive avec backtracking + élagage intelligent
+	 * Fonction récursive avec backtracking + élagage intelligent
+	 * Explore toutes les permutations possibles des chiffres de 1 à 9
+	 *
+	 * @param depth - Profondeur actuelle dans l'arbre de recherche
 	 */
 	function backtrack(depth: number) {
+		// Solution complète trouvée
 		if (depth === 9) {
 			const result = func(...(current as Solution));
 			const status: 'success' | 'fail' =
 				Math.abs(result - 66) < 1e-6 ? 'success' : 'fail';
 
+			// Ajoute la solution si elle correspond au variant demandé
 			if (
 				variant === 'all' ||
 				(variant === 'all-valid' && status === 'success') ||
@@ -99,13 +125,14 @@ export function generateSolutionsSmart(variant: SolutionVariant): {
 			return;
 		}
 
+		// Essaie chaque chiffre disponible
 		for (const digit of digits) {
 			if (used.has(digit)) continue;
 
 			current[depth] = digit;
 			used.add(digit);
 
-			// ⛔️ Élagage de cas invalides (division par zéro)
+			// Élagage de cas invalides (division par zéro)
 			if (depth === 2 && current[2] === 0) {
 				used.delete(digit);
 				continue;
@@ -120,6 +147,7 @@ export function generateSolutionsSmart(variant: SolutionVariant): {
 		}
 	}
 
+	// Lance l'algorithme de backtracking
 	backtrack(0);
 
 	const end = performance.now();
@@ -131,62 +159,47 @@ export function generateSolutionsSmart(variant: SolutionVariant): {
 }
 
 /**
- * Check si la solution utilise les chiffres de 1 à 9
- * Check si les chiffres sont utilisé une seule fois
+ * Vérifie si une solution est valide
+ *
+ * Une solution valide doit :
+ * - Contenir exactement 9 chiffres
+ * - Utiliser uniquement des chiffres de 1 à 9
+ * - Ne pas contenir de doublons
+ *
+ * @param solution - Tableau de chiffres à vérifier
+ * @returns true si la solution est valide, false sinon
  */
-export function isValidSolution(solution: number[]): boolean {
+export function calculateSolutionStatus(solution: number[]): SolutionStatus {
 	// Vérifie qu'il y a exactement 9 éléments
-	if (solution.length !== 9) return false;
+	if (solution.length !== 9) return 'error';
 
 	const seen = new Set<number>();
 
 	for (const num of solution) {
 		// Doit être entre 1 et 9
-		if (num < 1 || num > 9) return false;
+		if (num < 1 || num > 9) return 'error';
 
 		// Pas de doublon
-		if (seen.has(num)) return false;
+		if (seen.has(num)) return 'error';
 
 		seen.add(num);
 	}
 
-	return true;
+	return func(...(solution as Solution)) === 66 ? 'success' : 'fail';
 }
 
-type Column = Record<string, string>;
+/**
+ * Vérifie si une solution a changé
+ *
+ * @param current - Solution actuelle
+ * @param previous - Solution précédente
+ * @returns true si la solution a changé, false sinon
+ */
+export function hasSolutionChanged(
+	current: number[],
+	previous: number[],
+): boolean {
+	if (current.length !== previous.length) return true;
 
-export function applySolutionToColumns(
-	columns: Column[],
-	solution: number[],
-): Column[] {
-	let index = 0;
-
-	return columns.map((col, colIndex) => {
-		// On récupère les clés triées verticalement (du haut vers le bas)
-		const keys = Object.keys(col).sort((a, b) => {
-			const [, aRow] = a.split('_').map(Number);
-			const [, bRow] = b.split('_').map(Number);
-			return aRow - bRow;
-		});
-
-		// Clés à remplir
-		const emptyKeys = keys.filter((key) => col[key] === '');
-
-		// On extrait les valeurs depuis la solution
-		let valuesForColumn = solution?.slice(index, index + emptyKeys.length);
-
-		// 👉 Inverser seulement la colonne 3 (index 2)
-		if (colIndex === 2) {
-			valuesForColumn = valuesForColumn.reverse();
-		}
-
-		// Injecter les valeurs dans les bons emplacements
-		const updatedColumn: Column = { ...col };
-		emptyKeys.forEach((key, i) => {
-			updatedColumn[key] = valuesForColumn[i] ?? '';
-		});
-
-		index += emptyKeys.length;
-		return updatedColumn;
-	});
+	return current.some((value, index) => value !== previous[index]);
 }

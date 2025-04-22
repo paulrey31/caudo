@@ -1,8 +1,16 @@
+// solution variant
+export type SolutionVariant = 'random' | 'all-valid' | 'all-invalid' | 'all';
+
+// solution
+export type Solution = number[];
+
+export type SolutionStatus = 'success' | 'fail' | 'error';
+
 // Solution type
 export type SolutionType = {
 	id: string;
-	solution: number[];
-	status: string;
+	solution: Solution;
+	status: SolutionStatus;
 };
 
 // State Solutions

@@ -1,10 +1,15 @@
+// library
 import { useCallback, useState } from 'react';
-import useSolutionsStore from '../store/SolutionsStore';
-import {
-	generateSolutionsSmart,
-	SolutionVariant,
-} from '../functions/solution.function';
 import { useRouter } from 'expo-router';
+
+// store
+import useSolutionsStore from '../store/SolutionsStore';
+
+// functions
+import { generateSolutionsSmart } from '../functions/solution.function';
+
+// types
+import { SolutionVariant } from '../types/solution.type';
 
 export default function useHomeManager() {
 	// zustang
@@ -26,27 +31,35 @@ export default function useHomeManager() {
 	});
 
 	// function to create solutions
-	const onCreateSolutions = useCallback((variant: SolutionVariant) => {
-		setLoadingMap((prev) => ({ ...prev, [variant]: true }));
+	const onCreateSolutions = useCallback(
+		(variant: SolutionVariant) => {
+			// declanche le loader
+			setLoadingMap((prev) => ({ ...prev, [variant]: true }));
 
-		const { solutions, duration } = generateSolutionsSmart(variant);
-		switch (variant) {
-			case 'random':
-				addSolution(solutions[0]);
-				break;
-			default:
-				addAllSolutions(solutions);
-				break;
-		}
+			// generate solutions
+			const { solutions, duration } = generateSolutionsSmart(variant);
 
-		setTimeout(() => {
+			// add solutions to store
+			switch (variant) {
+				case 'random':
+					addSolution(solutions[0]);
+					break;
+				default:
+					addAllSolutions(solutions);
+					break;
+			}
+
+			// set timer
 			setTimer(duration);
-		}, 1500);
-		setTimeout(() => {
-			setLoadingMap((prev) => ({ ...prev, [variant]: false }));
-			router.push('/(tabs)/list');
-		}, 3000);
-	}, []);
+
+			// naviguer vers la liste après un court délai
+			setTimeout(() => {
+				setLoadingMap((prev) => ({ ...prev, [variant]: false }));
+				router.push('/(tabs)/list');
+			}, 1500);
+		},
+		[addSolution, addAllSolutions, router],
+	);
 
 	// return
 	return {

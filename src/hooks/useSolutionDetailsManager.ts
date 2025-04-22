@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
-import { SolutionType } from '../types/SolutionsType';
+
+// types
+import { SolutionType, Solution } from '../types/solution.type';
+
+// store
 import useSolutionsStore from '../store/SolutionsStore';
-import { defaultColumns } from '../components/puzzle/puzzle.contant';
 import {
-	applySolutionToColumns,
-	isValidSolution,
+	calculateSolutionStatus,
+	hasSolutionChanged,
 } from '../functions/solution.function';
 
 export default function useSolutionDetailsManager({ id = '' }) {
@@ -14,59 +17,33 @@ export default function useSolutionDetailsManager({ id = '' }) {
 	// state
 	const [state, setState] = useState<SolutionType>({
 		id: '',
-		solution: [],
-		status: '',
+		solution: [0, 0, 0, 0, 0, 0, 0, 0, 0] as Solution,
+		status: 'fail',
 	});
-	const [isUpdated, setIsUpdated] = useState<boolean>(false);
-	const [columns, setColumns] = useState(defaultColumns);
+	const [isUpdated, setIsUpdated] = useState(false);
 
-	function updateSolutionAtIndex(index: number, newValue: number) {
-		setState((prev) => {
-			const updatedSolution = [...prev.solution];
-			updatedSolution[index] = newValue;
+	const handleUpdateSolution = (solution: Solution) => {
+		// calculate the new status
+		const newStatus = calculateSolutionStatus(solution);
+		// check if the solution has changed
+		const hasChanged = hasSolutionChanged(solution, state.solution);
 
-			return {
-				...prev,
-				solution: updatedSolution,
-			};
-		});
-	}
+		// update the solution
+		setState((prev) => ({ ...prev, solution, status: newStatus }));
+		// update the isUpdated state
+		setIsUpdated(hasChanged);
+	};
 
+	// useEffect to get the solution and apply it to the columns
 	useEffect(() => {
 		const solution = getSolutionById(id);
-		const columnsUpdated = applySolutionToColumns(columns, solution.solution);
-		setState(solution);
-		setColumns(columnsUpdated);
+		if (solution) setState(solution);
 	}, [id]);
 
-	useEffect(() => {
-		const hasEmpty = state.solution.some(
-			(n) => n === undefined || n === null || isNaN(n),
-		);
-		const hasDuplicates =
-			new Set(state.solution).size !== state.solution.length;
-
-		let status: SolutionType['status'] = '';
-
-		if (hasEmpty || hasDuplicates) {
-			status = 'error';
-		} else if (isValidSolution(state.solution)) {
-			status = 'success';
-		} else {
-			status = 'fail';
-		}
-
-		setState((prev) => ({
-			...prev,
-			status,
-		}));
-		setIsUpdated(true);
-	}, [state.solution]);
-
+	// return
 	return {
 		state,
 		isUpdated,
-		columns,
-		updateSolutionAtIndex,
+		handleUpdateSolution,
 	};
 }

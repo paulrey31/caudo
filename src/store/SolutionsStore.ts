@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
 	SolutionsActionsType,
 	SolutionsStateType,
-} from '../types/SolutionsType';
+} from '../types/solution.type';
 
 // Store des Solutions
 const useSolutionsStore = create<SolutionsStateType & SolutionsActionsType>()(

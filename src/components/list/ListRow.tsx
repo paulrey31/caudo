@@ -85,7 +85,7 @@ export default function ListRow({
 					onPress={() => {
 						Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
 						router.push({
-							pathname: '/SolutionDetails',
+							pathname: '/solutionDetails',
 							params: { id },
 						});
 					}}
