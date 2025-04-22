@@ -1,50 +1,52 @@
 // librairie
-import { View, TouchableOpacity, Text } from 'react-native';
-import * as Haptics from 'expo-haptics';
+import { View } from 'react-native';
 
 // hooks
-import { FilterType } from '@/src/hooks/useListManager';
+import ButtonFilter from '../ButtonFilter';
 
-type Props = {
-	currentFilter: FilterType;
-	onChange: (value: FilterType) => void;
-	counts: Record<FilterType, number>;
+type ListFilterButtonType = {
+	currentFilter: string;
+	onChange: (value: string) => void;
+	counts: Record<string, number>;
 };
 
 export default function ListFilterButton({
 	currentFilter,
 	onChange,
 	counts,
-}: Props) {
-	const renderButton = (label: string, value: FilterType) => (
-		<TouchableOpacity
-			key={value}
-			style={{
-				paddingHorizontal: 12,
-				paddingVertical: 8,
-				backgroundColor: currentFilter === value ? '#333' : '#ccc',
-				borderRadius: 12,
-				marginRight: 8,
-			}}
-			onPress={() => {
-				Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-				onChange(value);
-			}}>
-			<Text style={{ color: currentFilter === value ? '#fff' : '#000' }}>
-				{label} {value !== 'all' ? '(' + counts[value] + ')' : null}
-			</Text>
-		</TouchableOpacity>
-	);
-
+}: ListFilterButtonType) {
 	return (
 		<View
 			style={{
 				flexDirection: 'row',
 				padding: 12,
 			}}>
-			{renderButton('Tous', 'all')}
-			{renderButton('Succès', 'success')}
-			{renderButton('Échecs', 'fail')}
+			{/* BOUTON TOUS */}
+			<ButtonFilter
+				value='all'
+				currentFilter={currentFilter}
+				onChange={onChange}
+				label='Tous'
+				counts={counts}
+			/>
+
+			{/* BOUTON SUCCÈS */}
+			<ButtonFilter
+				value='success'
+				currentFilter={currentFilter}
+				onChange={onChange}
+				label='Succès'
+				counts={counts}
+			/>
+
+			{/* BOUTON ÉCHECS */}
+			<ButtonFilter
+				value='fail'
+				currentFilter={currentFilter}
+				onChange={onChange}
+				label='Échecs'
+				counts={counts}
+			/>
 		</View>
 	);
 }

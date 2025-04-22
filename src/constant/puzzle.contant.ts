@@ -1,0 +1,58 @@
+import { CellSpec } from '../types/puzzle.type';
+
+export const rawGrid: CellSpec[][] = [
+	[
+		{ type: 'input' },
+		{ type: 'fixed', visible: false },
+		{ type: 'input' },
+		{ type: 'fixed', value: '-', visible: true },
+		{ type: 'input' },
+		{ type: 'fixed', visible: false },
+		{ type: 'fixed', value: '66', visible: true },
+	],
+	[
+		{ type: 'fixed', value: '+', visible: true },
+		{ type: 'fixed', visible: false },
+		{ type: 'fixed', value: 'x', visible: true },
+		{ type: 'fixed', visible: false },
+		{ type: 'fixed', value: '-', visible: true },
+		{ type: 'fixed', visible: false },
+		{ type: 'fixed', value: '=', visible: true },
+	],
+	[
+		{ type: 'fixed', value: '13', visible: true },
+		{ type: 'fixed', visible: false },
+		{ type: 'fixed', value: '12', visible: true },
+		{ type: 'fixed', visible: false },
+		{ type: 'fixed', value: '11', visible: true },
+		{ type: 'fixed', visible: false },
+		{ type: 'fixed', value: '10', visible: true },
+	],
+	[
+		{ type: 'fixed', value: 'x', visible: true },
+		{ type: 'fixed', visible: false },
+		{ type: 'fixed', value: '+', visible: true },
+		{ type: 'fixed', visible: false },
+		{ type: 'fixed', value: '+', visible: true },
+		{ type: 'fixed', visible: false },
+		{ type: 'fixed', value: '-', visible: true },
+	],
+	[
+		{ type: 'input' },
+		{ type: 'fixed', visible: false },
+		{ type: 'input' },
+		{ type: 'fixed', visible: false },
+		{ type: 'input' },
+		{ type: 'fixed', visible: false },
+		{ type: 'input' },
+	],
+	[
+		{ type: 'fixed', value: ':', visible: true },
+		{ type: 'input' },
+		{ type: 'fixed', value: '+', visible: true },
+		{ type: 'fixed', visible: false },
+		{ type: 'fixed', value: 'x', visible: true },
+		{ type: 'input' },
+		{ type: 'fixed', value: ':', visible: true },
+	],
+];

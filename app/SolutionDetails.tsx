@@ -18,7 +18,7 @@ import useSolutionsStore from '@/src/store/SolutionsStore';
 
 // hooks
 import useSolutionDetailsManager from '@/src/hooks/useSolutionDetailsManager';
-import { PuzzleGrid } from '@/src/components/puzzle/PuzzleGrid';
+import PuzzleGrid from '@/src/components/puzzle/PuzzleGrid';
 
 // types
 import { SolutionStatusColor } from '@/src/types/solution.type';

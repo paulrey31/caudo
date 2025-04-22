@@ -19,6 +19,8 @@ export default function ListRow({
 	onSwipeEnd?: () => void;
 	registerOpenRow: (fn: () => void) => void;
 }) {
+	// Récupérer la liste des solutions et les actions du store
+	const removeSolution = useSolutionsStore((state) => state.removeSolution);
 	const router = useRouter();
 	const rowTranslateX = useRef(new Animated.Value(0)).current;
 	const rowOpacity = useRef(new Animated.Value(1)).current;
@@ -32,9 +34,6 @@ export default function ListRow({
 		onSwipeEnd,
 		registerOpenRow,
 	});
-
-	// Récupérer la liste des solutions et les actions du store
-	const removeSolution = useSolutionsStore((state) => state.removeSolution);
 
 	const handleDelete = () => {
 		Animated.parallel([

@@ -1,11 +1,5 @@
 // library
-import {
-	TouchableOpacity,
-	StyleSheet,
-	Text,
-	View,
-	ActivityIndicator,
-} from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 
 // hooks
@@ -13,9 +7,7 @@ import useHomeManager from '@/src/hooks/useHomeManager';
 
 // components
 import Timer from '@/src/components/Timer';
-
-// types
-import { SolutionVariant } from '@/src/types/solution.type';
+import Button from '@/src/components/Button';
 
 export default function Home() {
 	// HOOKS
@@ -42,39 +34,33 @@ export default function Home() {
 				</Text>
 				<Timer time={'' + timer} />
 
-				{/* BOUTONS */}
-				{[
-					{
-						label: 'Générer toutes les solutions',
-						type: 'all' as SolutionVariant,
-					},
-					{ label: 'Générer une solutions', type: 'random' as SolutionVariant },
-					{
-						label: 'Créer une solutions manuellement',
-						type: 'manual' as SolutionVariant,
-					},
-				].map((btn, index) => (
-					<TouchableOpacity
-						key={index}
-						style={styles.button}
-						onPress={async () => {
-							await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-							onCreateSolutions(btn.type);
-						}}
-						disabled={isLoading['all']}>
-						<View style={styles.row}>
-							<Text style={styles.txtButton}>{btn.label}</Text>
-							{isLoading[btn.type] && (
-								<View style={styles.loaderWrapper}>
-									<ActivityIndicator
-										size='small'
-										color='#fff'
-									/>
-								</View>
-							)}
-						</View>
-					</TouchableOpacity>
-				))}
+				{/* BOUTONS GENERATE ALL SOLUTIONS */}
+				<Button
+					label='Générer toutes les solutions'
+					color='#1E1E1E'
+					height={60}
+					width='100%'
+					disabled={isLoading['all']}
+					isLoading={isLoading['all']}
+					onPress={async () => {
+						await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+						onCreateSolutions('all');
+					}}
+				/>
+
+				{/* BOUTONS GENERATE ONE SOLUTION */}
+				<Button
+					label='Générer une solutions'
+					color='#1E1E1E'
+					height={60}
+					width='100%'
+					disabled={isLoading['random']}
+					isLoading={isLoading['random']}
+					onPress={async () => {
+						await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+						onCreateSolutions('random');
+					}}
+				/>
 			</View>
 		</View>
 	);
@@ -111,27 +97,5 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		gap: 20,
-	},
-	button: {
-		height: 60,
-		width: '100%',
-		alignItems: 'center',
-		justifyContent: 'center',
-		backgroundColor: '#1E1E1E',
-		borderRadius: 5,
-	},
-	row: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'center',
-		gap: 10,
-	},
-	loaderWrapper: {
-		marginLeft: 8,
-	},
-	txtButton: {
-		fontSize: 20,
-		fontWeight: 700,
-		color: '#ffffff',
 	},
 });

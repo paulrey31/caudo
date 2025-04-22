@@ -17,6 +17,7 @@ import useSwipeableListControl from '@/src/hooks/useSwipeableListControl';
 import useListManager from '@/src/hooks/useListManager';
 import ListFilterButton from '@/src/components/list/ListFilterButton';
 import useSolutionsStore from '@/src/store/SolutionsStore';
+import { ListFilterType } from '@/src/types/list.type';
 
 export default function List() {
 	// store zustang
@@ -43,7 +44,7 @@ export default function List() {
 			{/* FILTER */}
 			<ListFilterButton
 				currentFilter={filter}
-				onChange={setFilter}
+				onChange={(value) => setFilter(value as ListFilterType)}
 				counts={counts}
 			/>
 			{/* LIST */}

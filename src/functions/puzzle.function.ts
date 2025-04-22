@@ -1,5 +1,5 @@
 type ReplaceElementAtIndexProps = {
-	array: number[];
+	array: (number | null)[];
 	reverse: boolean;
 };
 

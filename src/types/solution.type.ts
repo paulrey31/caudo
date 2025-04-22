@@ -1,13 +1,8 @@
 // solution variant
-export type SolutionVariant =
-	| 'manual'
-	| 'random'
-	| 'all-valid'
-	| 'all-invalid'
-	| 'all';
+export type SolutionVariant = 'random' | 'all-valid' | 'all-invalid' | 'all';
 
 // solution
-export type Solution = number[];
+export type Solution = (number | null)[];
 
 export type SolutionStatus = 'success' | 'fail' | 'error';
 
@@ -36,7 +31,7 @@ export type SolutionsActionsType = {
 	clearSolutions: () => void;
 	removeSolution: (id: string) => void;
 	getSolutionById: (id: string) => SolutionType;
-	updateSolution: (
+	updateSolutionById: (
 		id: string,
 		newSolution: number[],
 		newStatus: string,

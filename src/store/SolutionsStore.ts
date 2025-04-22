@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
 	SolutionsActionsType,
 	SolutionsStateType,
+	SolutionStatus,
 } from '../types/solution.type';
 
 // Store des Solutions
@@ -35,9 +36,13 @@ const useSolutionsStore = create<SolutionsStateType & SolutionsActionsType>()(
 					solutions: state.solutions.filter((sol) => sol.id !== id),
 				})),
 			// Récupère une solution
-			getSolutionById: (id) => get().solutions.find((sol) => sol.id === id), // Recherche de la solution par ID
+			getSolutionById: (id) => {
+				const solution = get().solutions.find((sol) => sol.id === id);
+				if (!solution) throw new Error(`Solution with id ${id} not found`);
+				return solution;
+			},
 			// Update de la solution
-			updateSolution: (id, newSolution, newStatus) =>
+			updateSolutionById: (id, newSolution, newStatus) =>
 				set((state) => {
 					const index = state.solutions.findIndex((s) => s.id === id);
 					if (index === -1) return {};
@@ -48,7 +53,7 @@ const useSolutionsStore = create<SolutionsStateType & SolutionsActionsType>()(
 					updatedSolutions[index] = {
 						...existing,
 						solution: newSolution,
-						status: newStatus,
+						status: newStatus as SolutionStatus,
 					};
 
 					return { solutions: updatedSolutions };

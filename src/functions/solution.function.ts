@@ -1,5 +1,4 @@
 import {
-	Solution,
 	SolutionStatus,
 	SolutionType,
 	SolutionVariant,
@@ -7,6 +6,18 @@ import {
 
 // Exporter le type SolutionVariant pour qu'il soit accessible depuis d'autres fichiers
 export { SolutionVariant };
+
+type SolutionTuple = [
+	number,
+	number,
+	number,
+	number,
+	number,
+	number,
+	number,
+	number,
+	number,
+];
 
 /**
  * Fonction mathématique qui calcule le résultat d'une solution
@@ -22,7 +33,7 @@ export { SolutionVariant };
  * @param i - Neuvième chiffre
  * @returns Le résultat du calcul
  */
-function func(
+function calculateResult(
 	a: number,
 	b: number,
 	c: number,
@@ -59,47 +70,70 @@ function formatDuration(ms: number): string {
 }
 
 /**
+ * Vérifie si une solution est valide
+ *
+ * Une solution valide doit :
+ * - Contenir exactement 9 chiffres
+ * - Utiliser uniquement des chiffres de 1 à 9
+ * - Ne pas contenir de doublons
+ *
+ * @param solution - Tableau de chiffres à vérifier
+ * @returns true si la solution est valide, false sinon
+ */
+export function calculateSolutionStatus(
+	solution: (number | null)[],
+): SolutionStatus {
+	// Vérifie qu'il y a exactement 9 éléments
+	if (solution.length !== 9) return 'error';
+
+	const seen = new Set<number>();
+
+	for (const num of solution) {
+		// Doit être entre 1 et 9
+		if (num === null || num < 1 || num > 9) return 'error';
+
+		// Pas de doublon
+		if (seen.has(num)) return 'error';
+
+		seen.add(num);
+	}
+
+	const result = calculateResult(...(solution as SolutionTuple));
+	// return success or fail
+	return Math.abs(result - 66) < 1e-6 ? 'success' : 'fail';
+}
+
+/**
  * Génère des solutions selon le mode spécifié
  *
  * Cette fonction utilise un algorithme de backtracking pour générer toutes les solutions possibles
  * ou une solution aléatoire selon le variant spécifié.
  *
- * @param variant - Type de solutions à générer ('random', 'all-valid', 'all-invalid', 'all')
+ * @param variant - Type de solutions à générer ('manual', 'random', 'all-valid', 'all-invalid', 'all')
  * @returns Un objet contenant les solutions générées, la durée de génération et la durée en ms
  */
 export function generateSolutionsSmart(variant: SolutionVariant): {
 	solutions: SolutionType[];
 	duration: string;
 } {
+	// init
 	const start = performance.now();
 	const digits = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 	const used = new Set<number>();
 	const results: SolutionType[] = [];
 
-	// Mode manuel : génère une seule solution manuelle
-	if (variant === 'manual') {
-		return {
-			solutions: [
-				{
-					id: generateId(),
-					solution: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-					status: 'fail',
-				},
-			],
-			duration: formatDuration(performance.now() - start),
-		};
-	}
-
 	// Mode aléatoire : génère une seule solution aléatoire
 	if (variant === 'random') {
 		const shuffled = [...digits].sort(() => Math.random() - 0.5);
-		const result = func(...(shuffled as Solution));
+		const result = calculateResult(...(shuffled as SolutionTuple));
 		const status = Math.abs(result - 66) < 1e-6 ? 'success' : 'fail';
+
+		// return
 		return {
 			solutions: [
 				{
 					id: generateId(),
-					solution: shuffled as Solution,
+					solution: shuffled as SolutionTuple,
 					status,
 				},
 			],
@@ -118,8 +152,8 @@ export function generateSolutionsSmart(variant: SolutionVariant): {
 	function backtrack(depth: number) {
 		// Solution complète trouvée
 		if (depth === 9) {
-			const result = func(...(current as Solution));
-			const status: 'success' | 'fail' =
+			const result = calculateResult(...(current as SolutionTuple));
+			const status: SolutionStatus =
 				Math.abs(result - 66) < 1e-6 ? 'success' : 'fail';
 
 			// Ajoute la solution si elle correspond au variant demandé
@@ -130,7 +164,7 @@ export function generateSolutionsSmart(variant: SolutionVariant): {
 			) {
 				results.push({
 					id: generateId(),
-					solution: [...(current as Solution)],
+					solution: [...(current as SolutionTuple)],
 					status,
 				});
 			}
@@ -143,16 +177,6 @@ export function generateSolutionsSmart(variant: SolutionVariant): {
 
 			current[depth] = digit;
 			used.add(digit);
-
-			// Élagage de cas invalides (division par zéro)
-			if (depth === 2 && current[2] === 0) {
-				used.delete(digit);
-				continue;
-			}
-			if (depth === 8 && current[8] === 0) {
-				used.delete(digit);
-				continue;
-			}
 
 			backtrack(depth + 1);
 			used.delete(digit);
@@ -170,36 +194,6 @@ export function generateSolutionsSmart(variant: SolutionVariant): {
 }
 
 /**
- * Vérifie si une solution est valide
- *
- * Une solution valide doit :
- * - Contenir exactement 9 chiffres
- * - Utiliser uniquement des chiffres de 1 à 9
- * - Ne pas contenir de doublons
- *
- * @param solution - Tableau de chiffres à vérifier
- * @returns true si la solution est valide, false sinon
- */
-export function calculateSolutionStatus(solution: number[]): SolutionStatus {
-	// Vérifie qu'il y a exactement 9 éléments
-	if (solution.length !== 9) return 'error';
-
-	const seen = new Set<number>();
-
-	for (const num of solution) {
-		// Doit être entre 1 et 9
-		if (num < 1 || num > 9) return 'error';
-
-		// Pas de doublon
-		if (seen.has(num)) return 'error';
-
-		seen.add(num);
-	}
-
-	return func(...(solution as Solution)) === 66 ? 'success' : 'fail';
-}
-
-/**
  * Vérifie si une solution a changé
  *
  * @param current - Solution actuelle
@@ -207,8 +201,8 @@ export function calculateSolutionStatus(solution: number[]): SolutionStatus {
  * @returns true si la solution a changé, false sinon
  */
 export function hasSolutionChanged(
-	current: number[],
-	previous: number[],
+	current: (number | null)[],
+	previous: (number | null)[],
 ): boolean {
 	if (current.length !== previous.length) return true;
 

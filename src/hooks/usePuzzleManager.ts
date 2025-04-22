@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { replaceElementAtIndex } from '../functions/puzzle.function';
 
-export const usePuzzleManager = ({ solution }: { solution: number[] }) => {
-	console.log('solution', solution);
-
+export const usePuzzleManager = ({
+	solution,
+}: {
+	solution: (number | null)[];
+}) => {
 	const [values, setValues] = useState<(number | null)[]>(
 		replaceElementAtIndex({ array: solution, reverse: false }),
 	);

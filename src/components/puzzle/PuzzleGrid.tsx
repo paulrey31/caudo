@@ -1,83 +1,22 @@
 import { View, StyleSheet } from 'react-native';
-import { PuzzleCell } from './PuzzleCell';
+import PuzzleCell from './PuzzleCell';
 import { usePuzzleManager } from '@/src/hooks/usePuzzleManager';
-import { CellSpec } from '@/src/types/puzzle.type';
 import { replaceElementAtIndex } from '@/src/functions/puzzle.function';
+import { rawGrid } from '@/src/constant/puzzle.contant';
 
-export const PuzzleGrid = ({
-	solution,
-	handleUpdateSolution,
-}: {
-	solution: number[];
-	handleUpdateSolution: (solution: number[]) => void;
-}) => {
+type Props = {
+	solution: (number | null)[];
+	handleUpdateSolution: (solution: (number | null)[]) => void;
+};
+
+export default function PuzzleGrid({ solution, handleUpdateSolution }: Props) {
 	const { values, updateValue } = usePuzzleManager({ solution });
 	let inputIndex = 0;
 
-	const rawGrid: (CellSpec | null)[][] = [
-		[
-			null,
-			{ type: 'fixed', visible: false },
-			null,
-			{ type: 'fixed', value: '-', visible: true },
-			null,
-			{ type: 'fixed', visible: false },
-			{ type: 'fixed', value: '66', visible: true },
-		],
-		[
-			{ type: 'fixed', value: '+', visible: true },
-			{ type: 'fixed', visible: false },
-			{ type: 'fixed', value: 'x', visible: true },
-			{ type: 'fixed', visible: false },
-			{ type: 'fixed', value: '-', visible: true },
-			{ type: 'fixed', visible: false },
-			{ type: 'fixed', value: '=', visible: true },
-		],
-		[
-			{ type: 'fixed', value: '13', visible: true },
-			{ type: 'fixed', visible: false },
-			{ type: 'fixed', value: '12', visible: true },
-			{ type: 'fixed', visible: false },
-			{ type: 'fixed', value: '11', visible: true },
-			{ type: 'fixed', visible: false },
-			{ type: 'fixed', value: '10', visible: true },
-		],
-		[
-			{ type: 'fixed', value: 'x', visible: true },
-			{ type: 'fixed', visible: false },
-			{ type: 'fixed', value: '+', visible: true },
-			{ type: 'fixed', visible: false },
-			{ type: 'fixed', value: '+', visible: true },
-			{ type: 'fixed', visible: false },
-			{ type: 'fixed', value: '-', visible: true },
-		],
-		[
-			null,
-			{ type: 'fixed', visible: false },
-			null,
-			{ type: 'fixed', visible: false },
-			null,
-			{ type: 'fixed', visible: false },
-			null,
-		],
-		[
-			{ type: 'fixed', value: ':', visible: true },
-			null,
-			{ type: 'fixed', value: '+', visible: true },
-			{ type: 'fixed', visible: false },
-			{ type: 'fixed', value: 'x', visible: true },
-			null,
-			{ type: 'fixed', value: ':', visible: true },
-		],
-	];
-
-	const grid: CellSpec[][] = rawGrid.map((row) =>
-		row.map((cell) => cell ?? { type: 'input' }),
-	);
-
+	// render
 	return (
 		<View style={styles.grid}>
-			{grid.map((row, rowIndex) => (
+			{rawGrid.map((row, rowIndex) => (
 				<View
 					key={rowIndex}
 					style={styles.row}>
@@ -112,7 +51,7 @@ export const PuzzleGrid = ({
 			))}
 		</View>
 	);
-};
+}
 
 const styles = StyleSheet.create({
 	grid: {

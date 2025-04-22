@@ -65,13 +65,6 @@ export default function Layout() {
 							),
 						}}
 					/>
-					{/* <Tabs.Screen
-						name='solutionDetails'
-						options={{
-							// Cache complètement la tab
-							href: null,
-						}}
-					/> */}
 				</Tabs>
 			</SafeAreaProvider>
 		</GestureHandlerRootView>

@@ -12,7 +12,9 @@ import {
 
 export default function useSolutionDetailsManager({ id = '' }) {
 	// store zustang
-	const updateSolution = useSolutionsStore((state) => state.updateSolution);
+	const updateSolutionById = useSolutionsStore(
+		(state) => state.updateSolutionById,
+	);
 	const getSolutionById = useSolutionsStore((state) => state.getSolutionById);
 	const solutionStored = getSolutionById(id);
 
@@ -37,7 +39,10 @@ export default function useSolutionDetailsManager({ id = '' }) {
 	};
 
 	const handleSaveSolution = () => {
-		updateSolution(id, state.solution, state.status);
+		const validSolution = state.solution.filter(
+			(num): num is number => num !== null,
+		);
+		updateSolutionById(id, validSolution, state.status);
 		setIsUpdated(false);
 	};
 

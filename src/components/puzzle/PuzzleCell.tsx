@@ -1,16 +1,16 @@
 import React from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 
-type Props =
-	| { type: 'fixed'; value?: string; visible?: boolean }
-	| {
-			type: 'input';
-			inputValue: number | null;
-			onChange: (val: number | null) => void;
-			onBlur?: () => void;
-	  };
+type Props = {
+	type: 'input' | 'fixed';
+	value?: string;
+	visible?: boolean;
+	inputValue?: number | null;
+	onChange?: (val: number | null) => void;
+	onBlur?: () => void;
+};
 
-export const PuzzleCell: React.FC<Props> = (props) => {
+export default function PuzzleCell(props: Props) {
 	if (props.type === 'fixed') {
 		return (
 			<View style={props.visible ? styles.cell : styles.cellHidden}>
@@ -28,13 +28,13 @@ export const PuzzleCell: React.FC<Props> = (props) => {
 				value={props.inputValue?.toString() || ''}
 				onChangeText={(text) => {
 					const parsed = parseInt(text, 10);
-					props.onChange(isNaN(parsed) ? null : parsed);
+					props.onChange?.(isNaN(parsed) ? null : parsed);
 				}}
 				onBlur={props.onBlur}
 			/>
 		</View>
 	);
-};
+}
 
 const styles = StyleSheet.create({
 	cell: {
@@ -54,9 +54,12 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 	},
 	input: {
-		fontSize: 16,
+		fontSize: 20,
 		textAlign: 'center',
 		width: '100%',
 		height: '100%',
+		fontWeight: 'bold',
+		backgroundColor: '#D4C9BE',
+		borderRadius: 4,
 	},
 });

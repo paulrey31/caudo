@@ -28,7 +28,6 @@ export default function useHomeManager() {
 		'all-valid': false,
 		'all-invalid': false,
 		random: false,
-		manual: false,
 	});
 
 	// function to create solutions
@@ -42,9 +41,6 @@ export default function useHomeManager() {
 
 			// add solutions to store
 			switch (variant) {
-				case 'manual':
-					addSolution(solutions[0]);
-					break;
 				case 'random':
 					addSolution(solutions[0]);
 					break;
@@ -61,12 +57,6 @@ export default function useHomeManager() {
 				setLoadingMap((prev) => ({ ...prev, [variant]: false }));
 
 				switch (variant) {
-					case 'manual':
-						router.push({
-							pathname: '/solutionDetails',
-							params: { id: solutions[0].id },
-						});
-						break;
 					case 'random':
 						router.push({
 							pathname: '/solutionDetails',
