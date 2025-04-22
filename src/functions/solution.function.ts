@@ -112,10 +112,12 @@ export function calculateSolutionStatus(
  * @param variant - Type de solutions à générer ('manual', 'random', 'all-valid', 'all-invalid', 'all')
  * @returns Un objet contenant les solutions générées, la durée de génération et la durée en ms
  */
-export function generateSolutionsSmart(variant: SolutionVariant): {
+export async function generateSolutionsSmart(
+	variant: SolutionVariant,
+): Promise<{
 	solutions: SolutionType[];
 	duration: string;
-} {
+}> {
 	// init
 	const start = performance.now();
 	const digits = [1, 2, 3, 4, 5, 6, 7, 8, 9];

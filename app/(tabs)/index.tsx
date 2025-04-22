@@ -11,7 +11,8 @@ import Button from '@/src/components/Button';
 
 export default function Home() {
 	// HOOKS
-	const { timer, isLoading, onCreateSolutions } = useHomeManager();
+	const { timer, isLoading, onCreateSolutions, setLoadingMap } =
+		useHomeManager();
 
 	// render
 	return (
@@ -43,6 +44,7 @@ export default function Home() {
 					disabled={isLoading['all']}
 					isLoading={isLoading['all']}
 					onPress={async () => {
+						setLoadingMap((prev) => ({ ...prev, all: true }));
 						await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
 						onCreateSolutions('all');
 					}}
@@ -57,6 +59,7 @@ export default function Home() {
 					disabled={isLoading['random']}
 					isLoading={isLoading['random']}
 					onPress={async () => {
+						setLoadingMap((prev) => ({ ...prev, random: true }));
 						await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
 						onCreateSolutions('random');
 					}}

@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
 		width: '100%',
 		height: '100%',
 		fontWeight: 'bold',
-		backgroundColor: '#D4C9BE',
+		backgroundColor: '#EBE8DB',
 		borderRadius: 4,
 	},
 });

@@ -32,12 +32,9 @@ export default function useHomeManager() {
 
 	// function to create solutions
 	const onCreateSolutions = useCallback(
-		(variant: SolutionVariant) => {
-			// declanche le loader
-			setLoadingMap((prev) => ({ ...prev, [variant]: true }));
-
+		async (variant: SolutionVariant) => {
 			// generate solutions
-			const { solutions, duration } = generateSolutionsSmart(variant);
+			const { solutions, duration } = await generateSolutionsSmart(variant);
 
 			// add solutions to store
 			switch (variant) {
@@ -77,5 +74,6 @@ export default function useHomeManager() {
 		timer,
 		isLoading: loadingMap,
 		onCreateSolutions,
+		setLoadingMap,
 	};
 }
