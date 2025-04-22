@@ -8,6 +8,7 @@ import { useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { useRef } from 'react';
 import { SolutionStatusColor } from '@/src/types/solution.type';
+import { deleteSolution } from '@/src/services/api';
 
 export default function ListRow({
 	item,
@@ -35,7 +36,7 @@ export default function ListRow({
 		registerOpenRow,
 	});
 
-	const handleDelete = () => {
+	const handleDelete = async () => {
 		Animated.parallel([
 			Animated.timing(rowTranslateX, {
 				toValue: -500, // part vite vers la gauche
@@ -47,7 +48,12 @@ export default function ListRow({
 				duration: 200,
 				useNativeDriver: true,
 			}),
-		]).start(() => {
+		]).start(async () => {
+			try {
+				await deleteSolution(id);
+			} catch (e) {
+				console.error('Erreur générale :', e);
+			}
 			removeSolution(id); // on supprime une fois la sortie finie
 		});
 	};

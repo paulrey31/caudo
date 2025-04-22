@@ -9,6 +9,7 @@ import {
 	calculateSolutionStatus,
 	hasSolutionChanged,
 } from '../functions/solution.function';
+import { updateSolution } from '../services/api';
 
 export default function useSolutionDetailsManager({ id = '' }) {
 	// store zustang
@@ -38,11 +39,19 @@ export default function useSolutionDetailsManager({ id = '' }) {
 		setIsUpdated(hasChanged);
 	};
 
-	const handleSaveSolution = () => {
+	const handleSaveSolution = async () => {
 		const validSolution = state.solution.filter(
 			(num): num is number => num !== null,
 		);
-		updateSolutionById(id, validSolution, state.status);
+		try {
+			await updateSolution(id, {
+				solution: validSolution,
+				status: state.status,
+			});
+			updateSolutionById(id, validSolution, state.status);
+		} catch (e) {
+			console.error('Erreur générale :', e);
+		}
 		setIsUpdated(false);
 	};
 

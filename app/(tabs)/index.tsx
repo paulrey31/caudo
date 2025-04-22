@@ -1,6 +1,7 @@
 // library
 import { StyleSheet, Text, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import * as SplashScreen from 'expo-splash-screen';
 
 // hooks
 import useHomeManager from '@/src/hooks/useHomeManager';
@@ -8,12 +9,18 @@ import useHomeManager from '@/src/hooks/useHomeManager';
 // components
 import Timer from '@/src/components/Timer';
 import Button from '@/src/components/Button';
+import SplashScreens from '@/src/components/SplashScreens';
+// splash screen
+SplashScreen.preventAutoHideAsync();
 
 export default function Home() {
 	// HOOKS
-	const { timer, isLoading, onCreateSolutions, setLoadingMap } =
+	const { timer, isLoading, isReady, onCreateSolutions, setLoadingMap } =
 		useHomeManager();
 
+	if (!isReady) {
+		return <SplashScreens />;
+	}
 	// render
 	return (
 		<View style={styles.container}>

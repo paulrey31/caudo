@@ -22,6 +22,7 @@ import PuzzleGrid from '@/src/components/puzzle/PuzzleGrid';
 
 // types
 import { SolutionStatusColor } from '@/src/types/solution.type';
+import { deleteSolution } from '@/src/services/api';
 
 export default function SolutionDetailsScreen() {
 	// store zustang
@@ -87,10 +88,15 @@ export default function SolutionDetailsScreen() {
 				<View style={styles.footer}>
 					<TouchableOpacity
 						style={styles.button}
-						onPress={() => {
+						onPress={async () => {
 							Haptics.notificationAsync(
 								Haptics.NotificationFeedbackType.Success,
 							);
+							try {
+								await deleteSolution(solutionId);
+							} catch (e) {
+								console.error('Erreur générale :', e);
+							}
 							removeSolution(solutionId);
 							router.back();
 						}}>

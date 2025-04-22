@@ -8,6 +8,7 @@ export default function useListManager(solutions: SolutionType[]) {
 	// state
 	const [scrollEnabled, setScrollEnabled] = useState<boolean>(true);
 	const [filter, setFilter] = useState<ListFilterType>('all');
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	// Liste filtrée selon le filtre actif
 	const filteredSolutions = useMemo(() => {
@@ -40,10 +41,12 @@ export default function useListManager(solutions: SolutionType[]) {
 		// state
 		scrollEnabled,
 		filter,
+		isLoading,
 
 		// set
 		setFilter,
 		setScrollEnabled,
+		setIsLoading,
 
 		// memo
 		filteredSolutions,

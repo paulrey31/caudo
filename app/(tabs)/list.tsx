@@ -1,11 +1,5 @@
 // librairie
-import {
-	FlatList,
-	StyleSheet,
-	Text,
-	TouchableOpacity,
-	View,
-} from 'react-native';
+import { FlatList, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 
 // components
@@ -18,6 +12,8 @@ import useListManager from '@/src/hooks/useListManager';
 import ListFilterButton from '@/src/components/list/ListFilterButton';
 import useSolutionsStore from '@/src/store/SolutionsStore';
 import { ListFilterType } from '@/src/types/list.type';
+import { deleteAllSolutions } from '@/src/services/api';
+import Button from '@/src/components/Button';
 
 export default function List() {
 	// store zustang
@@ -65,32 +61,25 @@ export default function List() {
 				windowSize={5}
 			/>
 			{/* DELETE ALL SOLUTION */}
-			<TouchableOpacity
-				style={styles.button}
-				onPress={() => {
-					Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-					clearSolutions();
-				}}>
-				<Text style={styles.txtButton}>Supprimer toute les solutions</Text>
-			</TouchableOpacity>
+			<View style={{ marginBottom: 12, marginTop: 12 }}>
+				<Button
+					label='Supprimer toute les solutions'
+					onPress={async () => {
+						Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+						try {
+							await deleteAllSolutions();
+						} catch (e) {
+							console.error('Erreur générale :', e);
+						}
+						clearSolutions();
+					}}
+					color='#1E1E1E'
+					height={60}
+					width='98%'
+					disabled={false}
+					isLoading={false}
+				/>
+			</View>
 		</View>
 	);
 }
-
-const styles = StyleSheet.create({
-	button: {
-		height: 52,
-		width: '98%',
-		alignItems: 'center',
-		justifyContent: 'center',
-		backgroundColor: '#1E1E1E',
-		borderRadius: 5,
-		marginTop: 12,
-		marginBottom: 12,
-	},
-	txtButton: {
-		fontSize: 20,
-		fontWeight: 700,
-		color: '#ffffff',
-	},
-});
