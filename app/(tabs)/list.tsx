@@ -1,5 +1,5 @@
 // librairie
-import { FlatList, View } from 'react-native';
+import { FlatList, View, Platform } from 'react-native';
 import * as Haptics from 'expo-haptics';
 
 // components
@@ -68,7 +68,11 @@ export default function List() {
 					label='Supprimer toute les solutions'
 					onPress={async () => {
 						setIsLoading(true);
-						Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+						if (Platform.OS !== 'web') {
+							Haptics.notificationAsync(
+								Haptics.NotificationFeedbackType.Success,
+							);
+						}
 						try {
 							await deleteAllSolutions();
 						} catch (e) {

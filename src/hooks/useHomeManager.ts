@@ -37,6 +37,7 @@ export default function useHomeManager() {
 	// function to create solutions
 	const onCreateSolutions = useCallback(
 		async (variant: SolutionVariant) => {
+			setTimer('00m00.00s');
 			// generate solutions
 			const { solutions, duration } = await generateSolutionsSmart(variant);
 
@@ -60,7 +61,7 @@ export default function useHomeManager() {
 				default:
 					addAllSolutions(solutions);
 					try {
-						await uploadSolutionsInBatches(solutions, 10000);
+						await uploadSolutionsInBatches(solutions, 30000);
 					} catch (e) {
 						console.error('Erreur générale :', e);
 					}

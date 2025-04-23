@@ -6,6 +6,7 @@ import {
 	View,
 	TouchableWithoutFeedback,
 	Keyboard,
+	Platform,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import * as Haptics from 'expo-haptics';
@@ -60,9 +61,11 @@ export default function SolutionDetailsScreen() {
 						}}
 						disabled={!isUpdated || state.status === 'error'}
 						onPress={() => {
-							Haptics.notificationAsync(
-								Haptics.NotificationFeedbackType.Success,
-							);
+							if (Platform.OS !== 'web') {
+								Haptics.notificationAsync(
+									Haptics.NotificationFeedbackType.Success,
+								);
+							}
 							handleSaveSolution();
 						}}>
 						<Text
@@ -89,9 +92,11 @@ export default function SolutionDetailsScreen() {
 					<TouchableOpacity
 						style={styles.button}
 						onPress={async () => {
-							Haptics.notificationAsync(
-								Haptics.NotificationFeedbackType.Success,
-							);
+							if (Platform.OS !== 'web') {
+								Haptics.notificationAsync(
+									Haptics.NotificationFeedbackType.Success,
+								);
+							}
 							try {
 								await deleteSolution(solutionId);
 							} catch (e) {

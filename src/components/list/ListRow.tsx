@@ -1,4 +1,11 @@
-import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+	Animated,
+	Platform,
+	Pressable,
+	StyleSheet,
+	Text,
+	View,
+} from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Tag from '../Tag';
 import { ListRowType } from '@/src/types/list.type';
@@ -72,7 +79,11 @@ export default function ListRow({
 			<View style={styles.deleteButton}>
 				<Pressable
 					onPress={() => {
-						Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+						if (Platform.OS !== 'web') {
+							Haptics.notificationAsync(
+								Haptics.NotificationFeedbackType.Success,
+							);
+						}
 						handleDelete();
 					}}>
 					<Text style={styles.deleteText}>Supprimer</Text>
@@ -89,7 +100,9 @@ export default function ListRow({
 				{/* Zone pressable pour ouvrir la page */}
 				<Pressable
 					onPress={() => {
-						Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+						if (Platform.OS !== 'web') {
+							Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+						}
 						router.push({
 							pathname: '/solutionDetails',
 							params: { id },

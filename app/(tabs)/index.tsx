@@ -1,5 +1,5 @@
 // library
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Platform } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import * as SplashScreen from 'expo-splash-screen';
 
@@ -52,7 +52,9 @@ export default function Home() {
 					isLoading={isLoading.all}
 					onPress={async () => {
 						setLoadingMap((prev) => ({ ...prev, all: true }));
-						await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+						if (Platform.OS !== 'web') {
+							await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+						}
 						onCreateSolutions('all');
 					}}
 				/>
@@ -67,7 +69,9 @@ export default function Home() {
 					isLoading={isLoading.random}
 					onPress={async () => {
 						setLoadingMap((prev) => ({ ...prev, random: true }));
-						await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+						if (Platform.OS !== 'web') {
+							await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+						}
 						onCreateSolutions('random');
 					}}
 				/>

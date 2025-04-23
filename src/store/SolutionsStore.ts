@@ -1,7 +1,6 @@
 // Librairie
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Types
 import {
@@ -9,6 +8,9 @@ import {
 	SolutionsStateType,
 	SolutionStatus,
 } from '../types/solution.type';
+
+// Functions
+import { createCustomStorage } from '../functions/solution.function';
 
 // Store des Solutions
 const useSolutionsStore = create<SolutionsStateType & SolutionsActionsType>()(
@@ -61,7 +63,7 @@ const useSolutionsStore = create<SolutionsStateType & SolutionsActionsType>()(
 		}),
 		{
 			name: 'solutions-storage', // Le nom utilisé pour stocker les données
-			storage: createJSONStorage(() => AsyncStorage), // Utilisation de sessionStorage
+			storage: createJSONStorage(() => createCustomStorage()),
 		},
 	),
 );

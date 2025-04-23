@@ -1,8 +1,10 @@
+import { Platform } from 'react-native';
 import {
 	SolutionStatus,
 	SolutionType,
 	SolutionVariant,
 } from '../types/solution.type';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Exporter le type SolutionVariant pour qu'il soit accessible depuis d'autres fichiers
 export { SolutionVariant };
@@ -210,3 +212,79 @@ export function hasSolutionChanged(
 
 	return current.some((value, index) => value !== previous[index]);
 }
+
+/**
+ * Crée un stockage personnalisé avec une gestion de quota
+ *
+ * @returns Un objet contenant les méthodes getItem, setItem et removeItem
+ */
+export const createCustomStorage = () => {
+	// Crée un stockage personnalisé avec une gestion de quota
+	const storage = Platform.OS === 'web' ? window.localStorage : AsyncStorage;
+
+	// Retourne un objet contenant les méthodes getItem, setItem et removeItem
+	return {
+		// Récupère une valeur
+		getItem: async (name: string): Promise<string | null> => {
+			try {
+				const value = await storage.getItem(name);
+				return value;
+			} catch (error) {
+				console.error('Error getting item from storage:', error);
+				return null;
+			}
+		},
+		// Enregistre une valeur
+		setItem: async (name: string, value: string): Promise<void> => {
+			try {
+				// For web, check if we're exceeding quota
+				if (Platform.OS === 'web') {
+					try {
+						// Try to store a small test value first
+						const testKey = `test-${Date.now()}`;
+						storage.setItem(testKey, 'test');
+						storage.removeItem(testKey);
+
+						// If successful, store the actual value
+						storage.setItem(name, value);
+					} catch (error: unknown) {
+						const err = error as Error;
+						if (
+							err.name === 'QuotaExceededError' ||
+							err.message?.includes('quota')
+						) {
+							console.warn(
+								'Storage quota exceeded, implementing fallback strategy',
+							);
+
+							// Parse the value to get the solutions array
+							const data = JSON.parse(value);
+							if (data && data.state && data.state.solutions) {
+								// Keep only the most recent 50 solutions
+								const limitedSolutions = data.state.solutions.slice(-50);
+								data.state.solutions = limitedSolutions;
+
+								// Try storing the limited data
+								storage.setItem(name, JSON.stringify(data));
+								return;
+							}
+						}
+						throw error;
+					}
+				} else {
+					// For React Native, just store normally
+					await storage.setItem(name, value);
+				}
+			} catch (error) {
+				console.error('Error setting item in storage:', error);
+			}
+		},
+		removeItem: async (name: string): Promise<void> => {
+			try {
+				await storage.removeItem(name);
+			} catch (error) {
+				console.error('Error removing item from storage:', error);
+			}
+		},
+	};
+};

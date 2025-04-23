@@ -1,4 +1,4 @@
-import { TouchableOpacity, Text } from 'react-native';
+import { TouchableOpacity, Text, Platform } from 'react-native';
 import * as Haptics from 'expo-haptics';
 
 type ButtonFilterType = {
@@ -27,7 +27,9 @@ export default function ButtonFilter({
 				marginRight: 8,
 			}}
 			onPress={() => {
-				Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+				if (Platform.OS !== 'web') {
+					Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+				}
 				onChange(value);
 			}}>
 			<Text style={{ color: currentFilter === value ? '#fff' : '#000' }}>
