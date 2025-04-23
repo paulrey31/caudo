@@ -148,7 +148,7 @@ export async function generateSolutionsSmart(
 	const current: number[] = [];
 
 	/**
-	 * Fonction récursive avec backtracking + élagage intelligent
+	 * Fonction récursive avec backtracking
 	 * Explore toutes les permutations possibles des chiffres de 1 à 9
 	 *
 	 * @param depth - Profondeur actuelle dans l'arbre de recherche
